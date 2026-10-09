@@ -4,11 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#F5F0E8" />
-<title>高嘉琪 & 张靖 · 我们的婚礼 · 2026.11.14</title>
+<meta name="format-detection" content="telephone=no" />
+<!-- 分享信息：构建时由 vite.config.js 从页面底部的 #share-config 自动填入，请勿在此手改 -->
+<title>%SHARE_TITLE%</title>
 <meta name="description" content="从黄河边到泰山下，从一座城到一片海。2026.11.14，我们在荣成，等你赴约。" />
-<meta property="og:title" content="高嘉琪 & 张靖 · 婚礼邀请 · 2026.11.14 威海荣成" />
-<meta property="og:description" content="山海很远，相见值得。2026.11.14，我们在荣成等你赴约。" />
-<meta property="og:image" content="assets/share-cover.jpg" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="%SHARE_LINK%" />
+<meta property="og:title" content="%SHARE_TITLE%" />
+<meta property="og:description" content="%SHARE_DESC%" />
+<meta property="og:image" content="%SHARE_IMAGE%" />
+<meta property="og:image:width" content="1080" />
+<meta property="og:image:height" content="1080" />
+<meta itemprop="name" content="%SHARE_TITLE%" />
+<meta itemprop="description" content="%SHARE_DESC%" />
+<meta itemprop="image" content="%SHARE_IMAGE%" />
+<meta name="twitter:card" content="summary" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23773747'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23F5F0E8' font-family='serif'%3E%26%3C/text%3E%3C/svg%3E" />
 <style>
 /* ============================================================
@@ -1166,6 +1176,23 @@ footer {
 
 <audio id="bgm" loop preload="none"></audio>
 
+<!--
+  分享卡片（微信聊天 / 朋友圈 / 以后公众号 JS-SDK 的 updateAppMessageShareData 都用这一份）
+  - title：卡片标题，同时也是页面标题
+  - desc：卡片摘要
+  - image：封面绝对地址，文件在 public/share-cover.jpg（方形，≥300px，建议 1080×1080）
+  - link：页面正式地址（换域名时改这里）
+  构建时会自动写进 <head> 里的 title / og / itemprop 标签。
+-->
+<script type="application/json" id="share-config">
+{
+  "title": "高嘉琪 & 张靖 · 婚礼邀请 · 2026.11.14 威海荣成",
+  "desc": "山海很远，相见值得。2026.11.14，我们在荣成等你赴约。",
+  "image": "https://kdnsna.github.io/our-wedding/share-cover.jpg",
+  "link": "https://kdnsna.github.io/our-wedding/"
+}
+</script>
+
 <script>
 /* ============================================================
    集中配置：上线前只需要改这里
@@ -1181,6 +1208,9 @@ const CONFIG = {
   // 背景音乐：留空 = 不显示 ♪ 按钮。确定曲目后把 mp3 放进 public/（例如 public/bgm.mp3），
   // 再把这里改成 "bgm.mp3" 即可。建议 128kbps、≤2.5MB；不会自动播放，宾客点 ♪ 才响。
   music: "",
+  // 分享信息（标题/摘要/封面/链接）统一读上方 #share-config，
+  // 以后接公众号 JS-SDK 时直接用 CONFIG.share 即可。
+  share: JSON.parse(document.getElementById("share-config").textContent),
 };
 
 /* ---------- 页面淡入 ---------- */
