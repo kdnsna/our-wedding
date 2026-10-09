@@ -215,6 +215,17 @@ img { display: block; max-width: 100%; }
 }
 .fab:active { transform: scale(0.94); }
 .fab[hidden] { display: none; }
+/* 已经在邀请页/尾声时收起「婚礼信息」，不挡地址和正文 */
+.fab-info { transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0s; }
+.fab-info.is-away {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(14px);
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+}
+body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
+.fab-music { transition: transform 0.25s ease, bottom 0.35s ease; }
 .fab-info {
   bottom: calc(20px + env(safe-area-inset-bottom));
   padding: 10px 20px;
@@ -511,10 +522,7 @@ img { display: block; max-width: 100%; }
   margin: 44px -22px 0;
 }
 .g-bleed .photo { aspect-ratio: 16 / 10; box-shadow: none; }
-.g-bleed .photo img { transform: scale(1.14); will-change: transform; }
-@media (hover: hover) {
-  .g-bleed .photo:hover img.loaded { transform: scale(1.14); }
-}
+.g-bleed .photo img { transform: scale(1.15); will-change: transform; }
 .g-phrase {
   grid-column: 1 / 13;
   text-align: center;
@@ -537,41 +545,51 @@ img { display: block; max-width: 100%; }
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: 41% 50%;
-  transform: scale(1.16);
+  transform: scale(1.08);
   will-change: transform;
 }
+/* 顶部只留一道很窄的象牙白过渡（不再切到新郎的头），天空区略压暗托住白字，底部草地压暗托住英文 */
 .inter-veil {
   position: absolute; inset: 0;
   background:
-    linear-gradient(to bottom, var(--ivory) 0%, rgba(245, 240, 232, 0.25) 18%, rgba(52, 58, 61, 0.28) 55%, rgba(52, 58, 61, 0.42) 100%);
+    linear-gradient(to bottom,
+      var(--ivory) 0%,
+      rgba(245, 240, 232, 0) 7%,
+      rgba(52, 58, 61, 0.2) 16%,
+      rgba(52, 58, 61, 0.1) 34%,
+      rgba(52, 58, 61, 0) 52%,
+      rgba(52, 58, 61, 0.18) 78%,
+      rgba(52, 58, 61, 0.45) 100%);
 }
+/* 诗句放在人物头顶的天空里，英文落到底部草地上 */
 .inter-copy {
   position: absolute; inset: 0;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  align-items: center; justify-content: space-between;
   text-align: center;
-  padding: 0 30px;
+  padding: max(7.5%, 38px) 24px max(7%, 30px);
   z-index: 3;
 }
 .inter-copy p {
   font-family: var(--serif-cn);
-  font-size: clamp(25px, 7vw, 36px);
+  font-size: clamp(22px, 6.2vw, 32px);
   color: #FDFBF4;
-  text-shadow: 0 2px 22px rgba(52, 58, 61, 0.45);
-  line-height: 2.1;
+  text-shadow: 0 1px 3px rgba(52, 58, 61, 0.35), 0 2px 22px rgba(52, 58, 61, 0.5);
+  line-height: 1.85;
   letter-spacing: 0.22em;
 }
 .inter-copy small {
-  margin-top: 22px;
+  display: block;
   font-family: var(--script-en);
   font-size: clamp(18px, 4.8vw, 23px);
   color: rgba(253, 251, 244, 0.9);
+  text-shadow: 0 1px 10px rgba(52, 58, 61, 0.55);
   letter-spacing: 0.06em;
 }
 
 /* ============ 05 THE INVITATION ============ */
 .act-invite {
-  padding: 130px 24px 110px;
+  padding: 130px 24px calc(110px + env(safe-area-inset-bottom));
   background: radial-gradient(ellipse 70% 42% at 50% 30%, rgba(119, 55, 71, 0.05), transparent 70%);
 }
 .invite-card {
@@ -1004,6 +1022,8 @@ footer {
   color: rgba(52, 58, 61, 0.45);
   background: var(--ivory);
 }
+/* 开了音乐时 ♪ 常驻右下角，页脚多留一点底 */
+body.has-music footer { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
 
 /* 桌面端适当收敛 */
 @media (min-width: 768px) {
@@ -1132,11 +1152,13 @@ footer {
 
 <!-- ============ 04.5 · 过场 ============ -->
 <section class="act interlude" id="interlude">
-  <div class="inter-bg"><picture><source type="image/webp" srcset="assets/img/interlude-1200.webp 1200w, assets/img/interlude-1920.webp 1920w" sizes="(max-aspect-ratio: 10/9) 129vh, 116vw" /><img data-photo data-speed="0.12" src="assets/img/interlude.jpg" loading="lazy" decoding="async" alt="草地山海" /></picture></div>
+  <div class="inter-bg"><picture><source type="image/webp" srcset="assets/img/interlude-1200.webp 1200w, assets/img/interlude-1920.webp 1920w" sizes="(max-aspect-ratio: 10/9) 120vh, 108vw" /><img data-photo data-speed="0.12" data-scale="1.08" src="assets/img/interlude.jpg" loading="lazy" decoding="async" alt="草地山海" /></picture></div>
   <div class="inter-veil"></div>
   <div class="inter-copy">
-    <p class="reveal-line">所爱隔山海，</p>
-    <p class="reveal-line">山海皆可平。</p>
+    <div class="inter-poem">
+      <p class="reveal-line">所爱隔山海，</p>
+      <p class="reveal-line">山海皆可平。</p>
+    </div>
     <small class="reveal-line">Love Will Find A Way.</small>
   </div>
 </section>
@@ -1524,12 +1546,15 @@ document.querySelectorAll(".reveal, .reveal-line").forEach((el, i) => {
       const p = (vh - r.top) / (vh + r.height);
       jcopy.style.transform = `translateY(${(p - 0.5) * 56}px)`;
     }
-    // data-speed 照片视差
+    // data-speed 照片视差：位移永远不超过放大留出的余量，上下不会露出底色
     speedImgs.forEach((img) => {
       const host = img.closest(".photo, .inter-bg").getBoundingClientRect();
       if (host.top < vh && host.bottom > 0) {
-        const off = (host.top + host.height / 2 - vh / 2) * parseFloat(img.dataset.speed);
-        img.style.transform = `translateY(${off.toFixed(1)}px) scale(1.15)`;
+        const scale = parseFloat(img.dataset.scale || "1.15");
+        const room = ((scale - 1) / 2) * host.height - 1;   // 单侧可用余量（px）
+        const raw = (host.top + host.height / 2 - vh / 2) * parseFloat(img.dataset.speed);
+        const off = Math.max(-room, Math.min(room, raw));
+        img.style.transform = `translateY(${off.toFixed(1)}px) scale(${scale})`;
       }
     });
     ticking = false;
@@ -1554,9 +1579,18 @@ document.querySelectorAll(".guide-head").forEach((head) => {
 });
 
 /* ---------- 快捷入口 ---------- */
-document.getElementById("infoBtn").addEventListener("click", () => {
-  document.getElementById("invitation").scrollIntoView({ behavior: "smooth" });
-});
+(function infoFab() {
+  const btn = document.getElementById("infoBtn");
+  const invite = document.getElementById("invitation");
+  btn.addEventListener("click", () => invite.scrollIntoView({ behavior: "smooth" }));
+  if (!("IntersectionObserver" in window)) return;
+  // 邀请页进入视口（或已经滚过它到尾声）就收起按钮；回到前面再出现
+  new IntersectionObserver(([en]) => {
+    const away = en.isIntersecting || en.boundingClientRect.top < 0;
+    btn.classList.toggle("is-away", away);
+    document.body.classList.toggle("info-away", away);
+  }, { rootMargin: "0px 0px -12% 0px" }).observe(invite);
+})();
 
 /* ---------- 音乐：默认安静，点击开启 ---------- */
 (function music() {
