@@ -183,6 +183,7 @@ img { display: block; max-width: 100%; }
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 .fab:active { transform: scale(0.94); }
+.fab[hidden] { display: none; }
 .fab-info {
   bottom: calc(20px + env(safe-area-inset-bottom));
   padding: 10px 20px;
@@ -864,7 +865,7 @@ footer {
 <body>
 
 <!-- 固定快捷入口 -->
-<button class="fab fab-music" id="musicBtn" aria-label="音乐开关" title="音乐">
+<button class="fab fab-music" id="musicBtn" aria-label="音乐开关" title="音乐" hidden>
   <span class="note">♪</span>
 </button>
 <button class="fab fab-info" id="infoBtn">婚礼信息</button>
@@ -1163,7 +1164,7 @@ footer {
 
 <footer>A LOVE STORY, BY THE SEA · 2026</footer>
 
-<audio id="bgm" loop preload="none" src="assets/bgm.mp3"></audio>
+<audio id="bgm" loop preload="none"></audio>
 
 <script>
 /* ============================================================
@@ -1177,6 +1178,9 @@ const CONFIG = {
   mapKeyword: "荣成华星宾馆",     // 地图搜索关键词
   mapCity: "威海",
   rsvpUrl: "",                   // 回执表单链接（如腾讯问卷/金数据），留空则提示微信联系
+  // 背景音乐：留空 = 不显示 ♪ 按钮。确定曲目后把 mp3 放进 public/（例如 public/bgm.mp3），
+  // 再把这里改成 "bgm.mp3" 即可。建议 128kbps、≤2.5MB；不会自动播放，宾客点 ♪ 才响。
+  music: "",
 };
 
 /* ---------- 页面淡入 ---------- */
@@ -1312,16 +1316,17 @@ document.getElementById("infoBtn").addEventListener("click", () => {
 (function music() {
   const btn = document.getElementById("musicBtn");
   const bgm = document.getElementById("bgm");
-  let available = true;
+  if (!CONFIG.music) return;          // 没配置音乐：♪ 按钮保持隐藏
+  bgm.src = CONFIG.music;
+  btn.hidden = false;
+  document.body.classList.add("has-music");
+  // 文件缺失或格式不支持：静默收起按钮，不打扰宾客
   bgm.addEventListener("error", () => {
-    available = false;
-    btn.style.opacity = "0.45";
+    btn.hidden = true;
+    btn.classList.remove("playing");
+    document.body.classList.remove("has-music");
   });
   btn.addEventListener("click", () => {
-    if (!available) {
-      alert("音乐文件待添加：把 bgm.mp3 放进 assets 文件夹即可。");
-      return;
-    }
     if (bgm.paused) {
       bgm.play().then(() => btn.classList.add("playing")).catch(() => {});
     } else {
