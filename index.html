@@ -28,7 +28,7 @@
 <style>
 /* ============================================================
    A LOVE STORY, BY THE SEA
-   配色：象牙奶油白 #F5F0E8 / 复古酒红 #773747 / 海雾蓝 #A9C1CB / 深石墨 #343A3D
+   配色：象牙白 #F5F0E8 / 纸面白 #FBF7EF / 沙色 #E6DCCB / 酒红 #773747（小字 #5E2A38）/ 海雾蓝 #A9C1CB / 深海蓝 #5F8494 / 墨色 #343A3D
    ============================================================ */
 @font-face {
   font-family: "Cormorant Garamond";
@@ -52,14 +52,19 @@
   font-display: swap;
 }
 :root {
+  /* 色板（收紧版）：象牙白 / 纸面白 / 沙色 / 酒红 / 深酒红 / 海雾蓝 / 深海蓝 / 墨色 */
   --ivory: #F5F0E8;
-  --ivory-deep: #EDE6D9;
   --paper: #FBF7EF;
+  --sand: #E6DCCB;
+  --ivory-deep: #EDE6D9;
   --wine: #773747;
+  --wine-ink: #5E2A38;          /* 小字号酒红，对比度更高 */
   --wine-soft: rgba(119, 55, 71, 0.45);
   --mist: #A9C1CB;
-  --mist-deep: #7FA3B0;
-  --graphite: #343A3D;
+  --sea-deep: #5F8494;
+  --mist-deep: var(--sea-deep);
+  --ink: #343A3D;
+  --graphite: var(--ink);
   --serif-en: "Cormorant Garamond", "Baskerville", "Palatino", "Times New Roman", serif;
   --serif-cn: "MaShanZheng", "Xingkai SC", "STXingkai", "Kaiti SC", "Songti SC", "Noto Serif SC", serif;
   --script-en: "Pinyon Script", "Snell Roundhand", "Savoye LET", "Apple Chancery", cursive;
@@ -94,7 +99,7 @@ img { display: block; max-width: 100%; }
 .photo {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, var(--ivory-deep) 0%, #E2D9C9 50%, var(--mist) 130%);
+  background: linear-gradient(135deg, var(--ivory-deep) 0%, var(--sand) 50%, var(--mist) 130%);
   box-shadow: 0 14px 40px rgba(52, 58, 61, 0.10);
 }
 .photo::after {
@@ -160,26 +165,6 @@ img { display: block; max-width: 100%; }
   100% { transform: translateY(-46vh); opacity: 0; }
 }
 
-/* ---------- 山海幕的星光 ---------- */
-.spark { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
-.spark i {
-  position: absolute;
-  width: 3px; height: 3px;
-  border-radius: 50%;
-  background: rgba(253, 251, 244, 0.95);
-  box-shadow: 0 0 8px 2px rgba(253, 251, 244, 0.55);
-  animation: twinkle 3.4s ease-in-out infinite;
-}
-.spark i:nth-child(1) { left: 18%; top: 24%; animation-delay: 0s; }
-.spark i:nth-child(2) { left: 34%; top: 38%; animation-delay: 1.1s; }
-.spark i:nth-child(3) { left: 63%; top: 20%; animation-delay: 2.2s; }
-.spark i:nth-child(4) { left: 79%; top: 40%; animation-delay: 0.6s; }
-.spark i:nth-child(5) { left: 50%; top: 15%; animation-delay: 1.7s; }
-@keyframes twinkle {
-  0%, 100% { opacity: 0.1; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.25); }
-}
-
 /* ---------- 滚动显现动画 ---------- */
 .reveal {
   opacity: 0;
@@ -193,7 +178,7 @@ img { display: block; max-width: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal-line { transition: none; opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
-  .act-opening .photo img, .bokeh i, .spark i { animation: none; }
+  .act-opening .photo img, .bokeh i { animation: none; }
 }
 
 /* ---------- 固定快捷按钮 ---------- */
@@ -250,7 +235,7 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
   font-family: var(--serif-en);
   font-size: 11px;
   letter-spacing: 0.42em;
-  color: var(--wine);
+  color: var(--wine-ink);
   text-transform: uppercase;
 }
 .act-tag::before {
@@ -334,7 +319,7 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
   opacity: 0;
   animation: fadeIn 1.6s ease 1.8s forwards;
 }
-.opening-copy .sub span { margin: 0 10px; color: var(--wine); }
+.opening-copy .sub span { margin: 0 10px; color: var(--wine-ink); }
 @media (max-width: 480px) {
   .opening-copy .sub { font-size: 12.5px; letter-spacing: 0.26em; line-height: 2.3; }
   .opening-copy .sub .place { display: block; }
@@ -398,7 +383,7 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
   gap: 14px;
   font-size: 12px;
   letter-spacing: 0.28em;
-  color: var(--wine);
+  color: var(--wine-ink);
 }
 .story-names::before {
   content: "";
@@ -407,64 +392,107 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
   opacity: 0.55;
 }
 
-/* ============ 03 THE JOURNEY（山海过渡） ============ */
+/* ============ 03 THE JOURNEY（山海过渡：自己拍的荣成海景） ============ */
+/* 结构：象牙白 → 海雾蓝 → 深海蓝（白字落在这里）→ 照片从深海色里浮出来 → 浪花 → 回到象牙白 */
 .act-journey {
-  height: 92svh;
-  min-height: 520px;
   overflow: hidden;
-  background: linear-gradient(178deg, var(--ivory) 0%, #D8E2E6 22%, var(--mist) 48%, var(--mist-deep) 100%);
+  padding-top: clamp(150px, 22svh, 200px);
+  background: linear-gradient(180deg,
+    var(--ivory) 0,
+    #DCE5E7 60px,
+    var(--mist) 130px,
+    #7D9DAA 220px,
+    var(--sea-deep) 320px,
+    var(--sea-deep) 100%);
 }
-.sea-glow {
-  position: absolute;
-  left: 50%; top: 30%;
-  width: 130%; height: 46%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(255, 252, 240, 0.6), transparent 68%);
-  animation: glowPulse 8s ease-in-out infinite alternate;
-}
-@keyframes glowPulse { from { opacity: 0.6; } to { opacity: 1; } }
-.sea-horizon {
-  position: absolute;
-  left: 0; right: 0; top: 33%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(253, 251, 244, 0.65) 50%, transparent);
-}
-.sea-light {
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(100deg, transparent 0 46px, rgba(255,255,255,0.07) 46px 48px);
-  animation: shimmer 9s ease-in-out infinite alternate;
-}
-@keyframes shimmer { from { opacity: 0.5; transform: translateX(-14px); } to { opacity: 1; transform: translateX(14px); } }
-.sea-wave {
-  position: absolute; left: -10%; right: -10%;
-  height: 120px;
-  border-radius: 45%;
-  opacity: 0.5;
-}
-.sea-wave.w1 { bottom: -40px; background: rgba(245,240,232,0.35); animation: drift 11s ease-in-out infinite alternate; }
-.sea-wave.w2 { bottom: -70px; background: rgba(245,240,232,0.5); animation: drift 15s ease-in-out infinite alternate-reverse; }
-@keyframes drift { from { transform: translateX(-3%) rotate(0.4deg); } to { transform: translateX(3%) rotate(-0.4deg); } }
 .journey-copy {
-  position: absolute;
-  inset: 0;
+  position: relative;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  align-items: center;
   text-align: center;
   padding: 0 30px;
   will-change: transform;
   z-index: 3;
 }
-.journey-copy .act-tag { color: rgba(253, 251, 244, 0.95); margin-bottom: 30px; justify-content: center; }
-.journey-copy .act-tag::before { background: rgba(253, 251, 244, 0.8); }
+.journey-copy .act-tag { color: rgba(253, 251, 244, 0.95); text-shadow: 0 1px 8px rgba(36, 56, 66, 0.35); margin-bottom: 26px; justify-content: center; }
+.journey-copy .act-tag::before { background: rgba(253, 251, 244, 0.75); opacity: 1; }
 .journey-copy p {
   font-family: var(--serif-cn);
   font-size: clamp(23px, 6.2vw, 31px);
   color: #FDFBF4;
-  text-shadow: 0 1px 16px rgba(52, 58, 61, 0.25);
+  text-shadow: 0 1px 2px rgba(36, 56, 66, 0.25), 0 2px 16px rgba(36, 56, 66, 0.35);
   line-height: 2.15;
   letter-spacing: 0.12em;
 }
-.journey-copy .lead { font-size: clamp(14px, 3.8vw, 17px); opacity: 0.92; letter-spacing: 0.3em; margin-bottom: 18px; }
+.journey-copy .lead { font-size: clamp(14px, 3.8vw, 17px); opacity: 0.95; letter-spacing: 0.3em; margin-bottom: 14px; }
+.journey-place {
+  margin-top: 18px;
+  font-family: var(--serif-en);
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  color: rgba(253, 251, 244, 0.82);
+}
+/* 主图：华星桥下的两只小船，通栏 */
+.j-scene {
+  position: relative;
+  margin-top: clamp(-10px, 2svh, 24px);
+  aspect-ratio: 1 / 1;
+  max-height: 620px;
+  width: 100%;
+}
+.j-photo { position: absolute; inset: 0; overflow: hidden; background: var(--sea-deep); }
+.j-photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: 42% 50%;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.j-photo img.loaded { opacity: 1; }
+/* 顶部让照片从深海色里慢慢浮出来，底部落进象牙白，都没有硬边 */
+.j-photo::before, .j-photo::after {
+  content: "";
+  position: absolute; left: 0; right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+.j-photo::before { top: 0; height: 34%; background: linear-gradient(180deg, var(--sea-deep) 0%, rgba(95, 132, 148, 0.55) 40%, rgba(95, 132, 148, 0) 100%); }
+.j-photo::after { bottom: 0; height: 34%; background: linear-gradient(180deg, rgba(245, 240, 232, 0) 0%, rgba(245, 240, 232, 0.5) 55%, rgba(245, 240, 232, 0.92) 88%, var(--ivory) 100%); }
+/* 三层浪花：只动 transform，32 / 24 / 18 秒一圈，几乎察觉不到 */
+.j-waves {
+  position: absolute; left: 0; right: 0; bottom: -1px;
+  height: 64px;
+  pointer-events: none;
+  z-index: 2;
+}
+.j-wave {
+  position: absolute; left: 0; bottom: 0;
+  width: 200%;
+  display: flex;
+  will-change: transform;
+}
+.j-wave svg { display: block; width: 50%; height: 100%; flex: none; }
+.j-wave.l1 { height: 100%; opacity: 0.35; animation: tide 32s linear infinite; }
+.j-wave.l2 { height: 78%; opacity: 0.6; animation: tide 24s linear infinite reverse; }
+.j-wave.l3 { height: 52%; animation: tide 18s linear infinite; }
+@keyframes tide { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+/* 第二张海景：一张小明信片，搭在浪花上 */
+.j-card {
+  position: relative;
+  width: min(48%, 250px);
+  margin: -96px 24px 0 auto;
+  z-index: 4;
+}
+.j-card .photo { aspect-ratio: 4 / 3; }
+.j-card .photo img { object-position: 62% 50%; }
+.j-card figcaption { font-size: 16px; padding-top: 7px; }
+.j-after { display: flow-root; background: var(--ivory); padding-bottom: 8px; }
+/* 没滚到附近之前不渲染图片：lazy 图片在 display:none 时不会发请求 */
+[data-defer-images]:not(.near) picture { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .j-waves .j-wave { animation: none; }
+}
 
 /* ============ 04 THE GALLERY（散页画廊） ============ */
 .act-gallery {
@@ -815,7 +843,7 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
   color: rgba(52, 58, 61, 0.85);
 }
 .guide-body .inner b { font-weight: 600; color: var(--graphite); }
-.guide-body a { color: var(--wine); }
+.guide-body a { color: var(--wine-ink); }
 
 /* ---------- 回执 ---------- */
 .rsvp { max-width: 560px; margin: 60px auto 0; text-align: center; }
@@ -843,7 +871,7 @@ body.info-away .fab-music { bottom: calc(20px + env(safe-area-inset-bottom)); }
 /* ---------- 联系人（电话一键拨打） ---------- */
 .contact-line { display: block; }
 .tel-link {
-  color: var(--wine);
+  color: var(--wine-ink);
   white-space: nowrap;
   text-decoration: none;
   border-bottom: 1px solid rgba(119, 55, 71, 0.35);
@@ -964,7 +992,7 @@ html.sheet-lock, html.sheet-lock body { overflow: hidden; }
   align-items: center; justify-content: center;
   text-align: center;
   padding: 120px 30px 140px;
-  background: linear-gradient(to bottom, var(--ivory) 40%, #E7EBE4 75%, var(--mist) 130%);
+  background: linear-gradient(to bottom, var(--ivory) 40%, #E4E6E2 75%, var(--mist) 130%);
   overflow: hidden;
 }
 .act-ending .words {
@@ -1070,19 +1098,30 @@ body.has-music footer { padding-bottom: calc(80px + env(safe-area-inset-bottom))
 </section>
 
 <!-- ============ 03 · THE JOURNEY ============ -->
-<section class="act act-journey" id="journey">
-  <div class="sea-glow"></div>
-  <div class="sea-horizon"></div>
-  <div class="sea-light"></div>
-  <div class="sea-wave w1"></div>
-  <div class="sea-wave w2"></div>
-  <div class="spark"><i></i><i></i><i></i><i></i><i></i></div>
+<section class="act act-journey" id="journey" data-defer-images>
   <div class="journey-copy" id="journeyCopy">
     <div class="act-tag reveal">03 · The Journey</div>
     <p class="lead reveal-line">山海之间，天地为证</p>
     <p class="reveal-line">这一次，</p>
     <p class="reveal-line">我们想邀请你，</p>
     <p class="reveal-line">一起奔赴山海。</p>
+    <div class="journey-place reveal-line">RONGCHENG · BY THE SEA</div>
+  </div>
+  <div class="j-scene">
+    <div class="j-photo"><picture><source type="image/webp" srcset="./assets/journey-1-960-C6a94aZa.webp 960w, ./assets/journey-1-1440-ehtZbAfY.webp 1440w" sizes="(min-width: 620px) 620px, 100vw" /><img data-photo src="./assets/journey-1-Dai5S5pp.jpg" loading="lazy" decoding="async" alt="荣成海边：石拱桥下停着两只小船" /></picture></div>
+    <div class="j-waves" aria-hidden="true">
+      <div class="j-wave l1"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C 240 14, 480 14, 720 30 S 1200 46, 1440 30 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C 240 14, 480 14, 720 30 S 1200 46, 1440 30 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg></div>
+      <div class="j-wave l2"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32 C 180 20, 360 20, 540 31 S 900 44, 1080 32 S 1350 22, 1440 32 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32 C 180 20, 360 20, 540 31 S 900 44, 1080 32 S 1350 22, 1440 32 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg></div>
+      <div class="j-wave l3"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 C 120 26, 240 26, 360 33 S 600 42, 720 34 S 960 26, 1080 33 S 1320 42, 1440 34 L1440 60 L0 60 Z" fill="#F5F0E8"/></svg><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34 C 120 26, 240 26, 360 33 S 600 42, 720 34 S 960 26, 1080 33 S 1320 42, 1440 34 L1440 60 L0 60 Z" fill="#F5F0E8"/></svg></div>
+    </div>
+  </div>
+  <div class="j-after">
+  <figure class="j-card reveal">
+    <div class="matte r-r">
+      <div class="photo"><picture><source type="image/webp" srcset="./assets/journey-2-540-DTsW3Xfn.webp 540w, ./assets/journey-2-1080-DvJIfOY9.webp 1080w" sizes="(min-width: 600px) 260px, 46vw" /><img data-photo src="./assets/journey-2-DZGYweoO.jpg" loading="lazy" decoding="async" alt="荣成海湾与白色栏杆" /></picture></div>
+      <figcaption>See you by the sea</figcaption>
+    </div>
+  </figure>
   </div>
 </section>
 
@@ -1315,7 +1354,7 @@ body.has-music footer { padding-bottom: calc(80px + env(safe-area-inset-bottom))
     <p class="reveal-line">见证我们，成为彼此的归处。</p>
   </div>
   <svg class="ending-wave reveal" width="120" height="14" viewBox="0 0 120 14" fill="none" aria-hidden="true">
-    <path d="M2 8 Q 12 2, 22 8 T 42 8 T 62 8 T 82 8 T 102 8 T 122 8" stroke="#7FA3B0" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M2 8 Q 12 2, 22 8 T 42 8 T 62 8 T 82 8 T 102 8 T 122 8" stroke="#5F8494" stroke-width="1.2" stroke-linecap="round"/>
   </svg>
   <div class="tail reveal">
     2026 . 11 . 14<br />
@@ -1484,6 +1523,17 @@ window.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && sheet.classList.contains("open")) close();
   });
+})();
+
+/* ---------- 第三幕的大图：快滚到时再挂出来（原生 lazy 的提前量有 1–2 屏，会挤占首屏流量） ---------- */
+(function deferSection() {
+  const secs = document.querySelectorAll("[data-defer-images]");
+  const show = (el) => el.classList.add("near");
+  if (!("IntersectionObserver" in window)) { secs.forEach(show); return; }
+  const dio = new IntersectionObserver((entries) => {
+    entries.forEach((en) => { if (en.isIntersecting) { show(en.target); dio.unobserve(en.target); } });
+  }, { rootMargin: "60% 0px" });
+  secs.forEach((el) => dio.observe(el));
 })();
 
 /* ---------- 照片加载：成功则淡入 ---------- */
