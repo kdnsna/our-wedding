@@ -2,3 +2,11 @@
 许可证：SIL Open Font License 1.1（OFL），允许嵌入网站自由使用。
 为加载速度考虑，本站仅包含页面实际用到的汉字子集（woff2，约 140KB）。
 完整字体与许可证全文：https://fonts.google.com/specimen/Ma+Shan+Zheng
+
+---
+英文字体（2026-10 起自托管，避免安卓/微信回退成黑体）：
+- Cormorant Garamond（Medium 500，正体）→ CormorantGaramond-500-latin.woff2，约 11KB
+  用于英文标题、日期、数字。许可证：OFL-CormorantGaramond.txt（SIL OFL 1.1）
+- Pinyon Script（Regular）→ PinyonScript-latin.woff2，约 24KB
+  用于图注与英文短句。许可证：OFL-PinyonScript.txt（SIL OFL 1.1）
+两款都只保留基本拉丁字符（U+0020–007E）和 · ‘ ’ “ ” – —，由 Google Fonts 源文件经 fonttools 子集化。

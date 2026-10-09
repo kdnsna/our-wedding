@@ -23,12 +23,29 @@
 <link rel="preload" as="image" type="image/webp" fetchpriority="high"
   imagesrcset="assets/img/hero-750.webp 750w, assets/img/hero-1535.webp 1535w"
   imagesizes="(max-aspect-ratio: 2/3) 67vh, 100vw" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/CormorantGaramond-500-latin.woff2" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23773747'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23F5F0E8' font-family='serif'%3E%26%3C/text%3E%3C/svg%3E" />
 <style>
 /* ============================================================
    A LOVE STORY, BY THE SEA
    配色：象牙奶油白 #F5F0E8 / 复古酒红 #773747 / 海雾蓝 #A9C1CB / 深石墨 #343A3D
    ============================================================ */
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("assets/fonts/CormorantGaramond-500-latin.woff2") format("woff2");
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00B7, U+2013-2014, U+2018-2019, U+201C-201D;
+}
+@font-face {
+  font-family: "Pinyon Script";
+  src: url("assets/fonts/PinyonScript-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007E, U+00B7, U+2013-2014, U+2018-2019, U+201C-201D;
+}
 @font-face {
   font-family: "MaShanZheng";
   src: url("assets/fonts/MaShanZheng-subset.woff2") format("woff2");
@@ -43,9 +60,9 @@
   --mist: #A9C1CB;
   --mist-deep: #7FA3B0;
   --graphite: #343A3D;
-  --serif-en: "Baskerville", "Palatino", "Didot", "Bodoni MT", "Times New Roman", serif;
+  --serif-en: "Cormorant Garamond", "Baskerville", "Palatino", "Times New Roman", serif;
   --serif-cn: "MaShanZheng", "Xingkai SC", "STXingkai", "Kaiti SC", "Songti SC", "Noto Serif SC", serif;
-  --script-en: "Snell Roundhand", "Savoye LET", "Apple Chancery", "Baskerville", cursive;
+  --script-en: "Pinyon Script", "Snell Roundhand", "Savoye LET", "Apple Chancery", cursive;
   --script-cn: "MaShanZheng", "Xingkai SC", "STXingkai", "Kaiti SC", cursive;
   --sans-cn: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
 }
@@ -464,8 +481,8 @@ img { display: block; max-width: 100%; }
 .matte figcaption {
   font-family: var(--script-en);
   text-align: center;
-  color: rgba(52, 58, 61, 0.62);
-  font-size: 15px;
+  color: rgba(52, 58, 61, 0.72);
+  font-size: 18px;
   letter-spacing: 0.02em;
   padding: 9px 0 0;
 }
@@ -503,8 +520,8 @@ img { display: block; max-width: 100%; }
   text-align: center;
   font-family: var(--script-en);
   color: var(--wine);
-  font-size: clamp(22px, 5.8vw, 30px);
-  letter-spacing: 0.03em;
+  font-size: clamp(26px, 7vw, 36px);
+  letter-spacing: 0.02em;
   padding: 56px 0 30px;
 }
 
@@ -547,8 +564,8 @@ img { display: block; max-width: 100%; }
 .inter-copy small {
   margin-top: 22px;
   font-family: var(--script-en);
-  font-size: clamp(15px, 4vw, 19px);
-  color: rgba(253, 251, 244, 0.85);
+  font-size: clamp(18px, 4.8vw, 23px);
+  color: rgba(253, 251, 244, 0.9);
   letter-spacing: 0.06em;
 }
 
@@ -625,9 +642,9 @@ img { display: block; max-width: 100%; }
 .invite-card .act-tag { display: flex; margin-bottom: 22px; }
 .invite-families {
   font-family: var(--serif-en);
-  font-size: 10.5px;
+  font-size: 11px;
   letter-spacing: 0.34em;
-  color: rgba(52, 58, 61, 0.6);
+  color: rgba(52, 58, 61, 0.72);
   margin-bottom: 14px;
 }
 .invite-card h2 {
@@ -662,7 +679,8 @@ img { display: block; max-width: 100%; }
   color: var(--graphite);
 }
 .invite-names em {
-  font-family: var(--script-en);
+  font-family: var(--serif-en);
+  font-style: normal;
   color: var(--wine);
   margin: 0 10px;
   font-size: 1.1em;
@@ -720,9 +738,9 @@ img { display: block; max-width: 100%; }
 .invite-note {
   margin-top: 30px;
   font-family: var(--script-en);
-  font-size: 17px;
-  letter-spacing: 0.03em;
-  color: rgba(52, 58, 61, 0.6);
+  font-size: 20px;
+  letter-spacing: 0.02em;
+  color: rgba(52, 58, 61, 0.68);
 }
 
 /* ---------- 赴约指南（可折叠卡片） ---------- */
@@ -971,7 +989,8 @@ html.sheet-lock, html.sheet-lock body { overflow: hidden; }
   color: var(--graphite);
 }
 .act-ending .tail .names em {
-  font-family: var(--script-en);
+  font-family: var(--serif-en);
+  font-style: normal;
   color: var(--wine);
   margin: 0 10px;
   font-size: 1.15em;
