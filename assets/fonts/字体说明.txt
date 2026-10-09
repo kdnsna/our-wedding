@@ -1,0 +1,4 @@
+本目录字体：Ma Shan Zheng（马善政体），作者 马善政（via Google Fonts）。
+许可证：SIL Open Font License 1.1（OFL），允许嵌入网站自由使用。
+为加载速度考虑，本站仅包含页面实际用到的汉字子集（woff2，约 140KB）。
+完整字体与许可证全文：https://fonts.google.com/specimen/Ma+Shan+Zheng
