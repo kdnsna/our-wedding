@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>我们的婚礼 · A Love Story, By the Sea · 2026.11.14</title>
+<meta name="description" content="从不同的地方出发，终于走到同一段人生。2026.11.14，我们在荣成，等你赴约。" />
+<meta property="og:title" content="我们的婚礼邀请 · 2026.11.14 威海荣成" />
+<meta property="og:description" content="山海很远，相见值得。诚挚邀请您莅临我们的婚礼。" />
+<meta property="og:image" content="assets/share-cover.jpg" />
+<style>
+/* ============================================================
+   A LOVE STORY, BY THE SEA
+   配色：象牙奶油白 #F5F0E8 / 复古酒红 #773747 / 海雾蓝 #A9C1CB / 深石墨 #343A3D
+   ============================================================ */
+:root {
+  --ivory: #F5F0E8;
+  --ivory-deep: #EDE6D9;
+  --wine: #773747;
+  --mist: #A9C1CB;
+  --mist-deep: #7FA3B0;
+  --graphite: #343A3D;
+  --serif-en: "Didot", "Bodoni MT", "Playfair Display", "Songti SC", "Noto Serif SC", serif;
+  --serif-cn: "Songti SC", "Noto Serif SC", "SimSun", serif;
+  --sans-cn: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--ivory);
+  color: var(--graphite);
+  font-family: var(--sans-cn);
+  overflow-x: hidden;
+  line-height: 1.8;
+}
+img { display: block; max-width: 100%; }
+::selection { background: var(--wine); color: var(--ivory); }
+
+/* ---------- 照片槽位：有照片显示照片，没有照片显示占位提示 ---------- */
+.photo {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ivory-deep) 0%, #E2D9C9 50%, var(--mist) 130%);
+}
+.photo img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.photo img.loaded { opacity: 1; }
+.photo .ph-label {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  color: rgba(52, 58, 61, 0.45);
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-align: center;
+  padding: 16px;
+}
+.photo .ph-label::before {
+  content: "";
+  width: 34px; height: 34px;
+  border: 1px solid rgba(119, 55, 71, 0.4);
+  border-radius: 50%;
+  background:
+    linear-gradient(rgba(119,55,71,.4), rgba(119,55,71,.4)) center/14px 1px no-repeat,
+    linear-gradient(rgba(119,55,71,.4), rgba(119,55,71,.4)) center/1px 14px no-repeat;
+}
+.photo .ph-label small { font-size: 10px; opacity: 0.7; letter-spacing: 0.08em; }
+
+/* ---------- 滚动显现动画 ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal-line { opacity: 0; transform: translateY(18px); transition: opacity 0.9s ease, transform 0.9s ease; }
+.reveal-line.in { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-line { transition: none; opacity: 1; transform: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------- 固定快捷按钮 ---------- */
+.fab {
+  position: fixed;
+  z-index: 90;
+  right: 16px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(119, 55, 71, 0.35);
+  background: rgba(245, 240, 232, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--wine);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(52, 58, 61, 0.12);
+  font-family: var(--sans-cn);
+}
+.fab-info {
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  padding: 10px 20px;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+}
+.fab-music {
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  width: 42px; height: 42px;
+  font-size: 16px;
+}
+.fab-music.playing .note { animation: bob 1s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
+/* ---------- 幕 通用 ---------- */
+.act { position: relative; }
+.act-tag {
+  font-family: var(--serif-en);
+  font-size: 11px;
+  letter-spacing: 0.42em;
+  color: var(--wine);
+  text-transform: uppercase;
+}
+
+/* ============ 01 THE OPENING ============ */
+.act-opening {
+  height: 100svh;
+  min-height: 560px;
+}
+.act-opening .photo { position: absolute; inset: 0; }
+.act-opening .photo img { animation: kenburns 22s ease-in-out infinite alternate; }
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.09); }
+}
+.act-opening .veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(245,240,232,0.10) 30%, rgba(245,240,232,0.55) 78%, var(--ivory) 100%);
+}
+.opening-copy {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 12%;
+  text-align: center;
+  padding: 0 24px;
+}
+.opening-copy h1 {
+  font-family: var(--serif-en);
+  font-weight: 400;
+  color: var(--wine);
+  font-size: clamp(30px, 8.4vw, 58px);
+  letter-spacing: 0.18em;
+  line-height: 1.35;
+}
+.opening-copy .sub {
+  margin-top: 18px;
+  font-size: 13px;
+  letter-spacing: 0.34em;
+  color: var(--graphite);
+}
+.opening-copy .sub span { margin: 0 10px; }
+.scroll-hint {
+  position: absolute;
+  left: 50%; bottom: 34px;
+  transform: translateX(-50%);
+  width: 1px; height: 44px;
+  background: linear-gradient(var(--wine), transparent);
+  animation: hint 2.2s ease-in-out infinite;
+}
+@keyframes hint { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
+
+/* ============ 02 OUR STORY ============ */
+.act-story {
+  padding: 110px 26px 90px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+.act-story .act-tag { margin-bottom: 34px; }
+.story-photo-main { width: 100%; aspect-ratio: 4 / 5; border-radius: 2px; }
+.story-photo-detail {
+  width: 52%;
+  aspect-ratio: 1 / 1;
+  margin: -64px 0 0 auto;
+  border: 6px solid var(--ivory);
+  border-radius: 2px;
+  z-index: 2;
+}
+.story-text {
+  margin-top: 52px;
+  font-family: var(--serif-cn);
+  font-size: clamp(17px, 4.6vw, 21px);
+  line-height: 2.3;
+  color: var(--graphite);
+}
+.story-text p { margin-bottom: 4px; }
+.story-names {
+  margin-top: 30px;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: var(--wine);
+}
+
+/* ============ 03 THE JOURNEY（山海过渡） ============ */
+.act-journey {
+  height: 92svh;
+  min-height: 520px;
+  overflow: hidden;
+  background: linear-gradient(178deg, var(--ivory) 0%, #D8E2E6 22%, var(--mist) 48%, var(--mist-deep) 100%);
+}
+.sea-light {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 34% at 50% 30%, rgba(255, 252, 240, 0.55), transparent 70%),
+    repeating-linear-gradient(100deg, transparent 0 46px, rgba(255,255,255,0.07) 46px 48px);
+  animation: shimmer 9s ease-in-out infinite alternate;
+}
+@keyframes shimmer { from { opacity: 0.55; transform: translateX(-14px); } to { opacity: 1; transform: translateX(14px); } }
+.sea-wave {
+  position: absolute; left: -10%; right: -10%;
+  height: 120px;
+  border-radius: 45%;
+  opacity: 0.5;
+}
+.sea-wave.w1 { bottom: -40px; background: rgba(245,240,232,0.35); animation: drift 11s ease-in-out infinite alternate; }
+.sea-wave.w2 { bottom: -70px; background: rgba(245,240,232,0.5); animation: drift 15s ease-in-out infinite alternate-reverse; }
+@keyframes drift { from { transform: translateX(-3%) rotate(0.4deg); } to { transform: translateX(3%) rotate(-0.4deg); } }
+.journey-copy {
+  position: absolute;
+  inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 0 30px;
+}
+.journey-copy .act-tag { color: rgba(245,240,232,0.9); margin-bottom: 26px; }
+.journey-copy p {
+  font-family: var(--serif-cn);
+  font-size: clamp(20px, 5.6vw, 27px);
+  color: #FDFBF4;
+  text-shadow: 0 1px 16px rgba(52, 58, 61, 0.25);
+  line-height: 2.2;
+  letter-spacing: 0.12em;
+}
+
+/* ============ 04 THE GALLERY ============ */
+.act-gallery {
+  padding: 110px 22px 60px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.act-gallery .act-tag { text-align: center; margin-bottom: 50px; }
+.g-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g-item { border-radius: 2px; }
+.g-item.tall { aspect-ratio: 3 / 4; }
+.g-item.wide { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+.g-item.sq { aspect-ratio: 1 / 1; }
+.g-offset { transform: translateY(28px); }
+.g-phrase {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-family: var(--serif-en);
+  font-style: italic;
+  color: var(--wine);
+  font-size: clamp(16px, 4.4vw, 21px);
+  letter-spacing: 0.14em;
+  padding: 30px 0 14px;
+}
+
+/* ============ 05 THE INVITATION ============ */
+.act-invite {
+  padding: 120px 24px 100px;
+  background:
+    linear-gradient(var(--ivory), var(--ivory)),
+    var(--ivory);
+}
+.invite-card {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px solid rgba(119, 55, 71, 0.22);
+  padding: 64px 28px 54px;
+  position: relative;
+  background: #FBF7EF;
+  box-shadow: 0 20px 60px rgba(52, 58, 61, 0.08);
+}
+.invite-card::before {
+  content: "";
+  position: absolute; inset: 8px;
+  border: 1px solid rgba(119, 55, 71, 0.14);
+  pointer-events: none;
+}
+.invite-card .act-tag { display: block; margin-bottom: 20px; }
+.invite-card h2 {
+  font-family: var(--serif-en);
+  font-weight: 400;
+  font-size: clamp(26px, 7vw, 38px);
+  letter-spacing: 0.3em;
+  color: var(--graphite);
+  margin-bottom: 8px;
+}
+.invite-zh {
+  font-family: var(--serif-cn);
+  font-size: 16px;
+  letter-spacing: 0.24em;
+  color: var(--graphite);
+  margin-top: 10px;
+}
+.invite-date {
+  margin: 44px 0 8px;
+  font-family: var(--serif-en);
+  color: var(--wine);
+}
+.invite-date .day { font-size: clamp(72px, 22vw, 120px); line-height: 1; letter-spacing: 0.04em; }
+.invite-date .ym { margin-top: 10px; font-size: 15px; letter-spacing: 0.5em; }
+.invite-week { font-size: 12px; letter-spacing: 0.34em; color: var(--graphite); opacity: 0.75; }
+.invite-venue {
+  margin-top: 40px;
+  font-family: var(--serif-cn);
+  font-size: 17px;
+  letter-spacing: 0.14em;
+  line-height: 2.2;
+}
+.invite-venue small { display: block; font-size: 12.5px; opacity: 0.7; letter-spacing: 0.2em; }
+.invite-line {
+  width: 42px; height: 1px;
+  background: var(--wine);
+  opacity: 0.5;
+  margin: 34px auto;
+}
+.btn-map {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 13px 38px;
+  border: 1px solid var(--wine);
+  color: var(--wine);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background 0.3s, color 0.3s;
+}
+.btn-map:active { background: var(--wine); color: var(--ivory); }
+.invite-note { margin-top: 26px; font-size: 11.5px; letter-spacing: 0.12em; opacity: 0.6; }
+
+/* ---------- 赴约指南（手风琴） ---------- */
+.guide {
+  max-width: 560px;
+  margin: 70px auto 0;
+  text-align: left;
+}
+.guide-title {
+  text-align: center;
+  font-family: var(--serif-cn);
+  letter-spacing: 0.3em;
+  font-size: 15px;
+  color: var(--wine);
+  margin-bottom: 22px;
+}
+.guide-item { border-top: 1px solid rgba(52, 58, 61, 0.14); }
+.guide-item:last-child { border-bottom: 1px solid rgba(52, 58, 61, 0.14); }
+.guide-head {
+  width: 100%;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 4px;
+  background: none; border: none;
+  font-family: var(--sans-cn);
+  font-size: 14.5px;
+  letter-spacing: 0.12em;
+  color: var(--graphite);
+  cursor: pointer;
+}
+.guide-head .arrow { transition: transform 0.35s; color: var(--wine); font-size: 12px; }
+.guide-item.open .arrow { transform: rotate(180deg); }
+.guide-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s ease;
+}
+.guide-body .inner {
+  padding: 2px 4px 20px;
+  font-size: 13.5px;
+  line-height: 2.1;
+  color: rgba(52, 58, 61, 0.85);
+}
+.guide-body a { color: var(--wine); }
+
+/* ---------- 回执 ---------- */
+.rsvp { max-width: 560px; margin: 56px auto 0; text-align: center; }
+.rsvp p { font-size: 13px; opacity: 0.75; letter-spacing: 0.1em; margin-bottom: 18px; }
+.btn-rsvp {
+  display: inline-block;
+  padding: 13px 42px;
+  background: var(--wine);
+  color: var(--ivory);
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-decoration: none;
+}
+
+/* ============ 06 THE ENDING ============ */
+.act-ending {
+  min-height: 78svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 110px 30px 130px;
+  background: linear-gradient(to bottom, var(--ivory) 40%, #E7EBE4 75%, var(--mist) 130%);
+}
+.act-ending .words {
+  font-family: var(--serif-cn);
+  font-size: clamp(19px, 5.2vw, 25px);
+  line-height: 2.4;
+  letter-spacing: 0.14em;
+  color: var(--graphite);
+}
+.act-ending .tail {
+  margin-top: 56px;
+  font-family: var(--serif-en);
+  color: var(--wine);
+  font-size: 14px;
+  letter-spacing: 0.4em;
+  line-height: 2.4;
+}
+.act-ending .tail .names { font-family: var(--serif-cn); font-size: 16px; letter-spacing: 0.3em; }
+
+footer {
+  text-align: center;
+  padding: 26px 20px calc(30px + env(safe-area-inset-bottom));
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  color: rgba(52, 58, 61, 0.45);
+  background: var(--ivory);
+}
+
+/* 桌面端适当收敛 */
+@media (min-width: 768px) {
+  .fab-info { right: 32px; }
+  .fab-music { right: 32px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 固定快捷入口 -->
+<button class="fab fab-music" id="musicBtn" aria-label="音乐开关" title="音乐">
+  <span class="note">♪</span>
+</button>
+<button class="fab fab-info" id="infoBtn">婚礼信息</button>
+
+<!-- ============ 01 · THE OPENING ============ -->
+<section class="act act-opening" id="opening">
+  <div class="photo">
+    <div class="ph-label">主视觉双人照<small>替换 assets/hero.jpg</small></div>
+    <img data-photo src="assets/hero.jpg" alt="主视觉双人婚纱照" />
+  </div>
+  <div class="veil"></div>
+  <div class="opening-copy">
+    <h1 class="reveal-line">A LOVE STORY<br />BY THE SEA</h1>
+    <div class="sub reveal-line">2026.11.14 <span>·</span> WEIHAI · RONGCHENG</div>
+  </div>
+  <div class="scroll-hint"></div>
+</section>
+
+<!-- ============ 02 · OUR STORY ============ -->
+<section class="act act-story" id="story">
+  <div class="act-tag reveal">02 · Our Story</div>
+  <div class="photo story-photo-main reveal">
+    <div class="ph-label">故事感婚纱照 · 大图<small>替换 assets/story-1.jpg</small></div>
+    <img data-photo src="assets/story-1.jpg" alt="婚纱照" />
+  </div>
+  <div class="photo story-photo-detail reveal">
+    <div class="ph-label">细节照<small>assets/story-2.jpg</small></div>
+    <img data-photo src="assets/story-2.jpg" alt="婚纱细节照" />
+  </div>
+  <div class="story-text">
+    <p class="reveal-line">我们从不同的地方出发，</p>
+    <p class="reveal-line">在同一座城市相伴。</p>
+    <p class="reveal-line">直到决定，把往后的日子</p>
+    <p class="reveal-line">写成同一个故事。</p>
+  </div>
+  <div class="story-names reveal">滨州博兴 <span style="color:var(--mist-deep)">×</span> 泰安新泰 · 相伴于济南</div>
+</section>
+
+<!-- ============ 03 · THE JOURNEY ============ -->
+<section class="act act-journey" id="journey">
+  <div class="sea-light"></div>
+  <div class="sea-wave w1"></div>
+  <div class="sea-wave w2"></div>
+  <div class="journey-copy">
+    <div class="act-tag reveal">03 · The Journey</div>
+    <p class="reveal-line">这一次，</p>
+    <p class="reveal-line">我们想邀请你，</p>
+    <p class="reveal-line">一起奔赴山海。</p>
+  </div>
+</section>
+
+<!-- ============ 04 · THE GALLERY ============ -->
+<section class="act act-gallery" id="gallery">
+  <div class="act-tag reveal">04 · The Gallery</div>
+  <div class="g-grid">
+    <div class="photo g-item tall reveal">
+      <div class="ph-label">gallery-1<small>assets/gallery-1.jpg</small></div>
+      <img data-photo src="assets/gallery-1.jpg" alt="婚纱照 1" />
+    </div>
+    <div class="photo g-item tall g-offset reveal">
+      <div class="ph-label">gallery-2<small>assets/gallery-2.jpg</small></div>
+      <img data-photo src="assets/gallery-2.jpg" alt="婚纱照 2" />
+    </div>
+    <div class="g-phrase reveal-line">Every Moment, With You.</div>
+    <div class="photo g-item wide reveal">
+      <div class="ph-label">gallery-3 · 宽幅<small>assets/gallery-3.jpg</small></div>
+      <img data-photo src="assets/gallery-3.jpg" alt="婚纱照 3" />
+    </div>
+    <div class="photo g-item sq reveal">
+      <div class="ph-label">gallery-4<small>assets/gallery-4.jpg</small></div>
+      <img data-photo src="assets/gallery-4.jpg" alt="婚纱照 4" />
+    </div>
+    <div class="photo g-item sq reveal">
+      <div class="ph-label">gallery-5<small>assets/gallery-5.jpg</small></div>
+      <img data-photo src="assets/gallery-5.jpg" alt="婚纱照 5" />
+    </div>
+    <div class="g-phrase reveal-line">To Have and To Hold.</div>
+    <div class="photo g-item wide reveal">
+      <div class="ph-label">gallery-6 · 宽幅<small>assets/gallery-6.jpg</small></div>
+      <img data-photo src="assets/gallery-6.jpg" alt="婚纱照 6" />
+    </div>
+    <div class="photo g-item tall g-offset reveal">
+      <div class="ph-label">gallery-7<small>assets/gallery-7.jpg</small></div>
+      <img data-photo src="assets/gallery-7.jpg" alt="婚纱照 7" />
+    </div>
+    <div class="photo g-item tall reveal">
+      <div class="ph-label">gallery-8<small>assets/gallery-8.jpg</small></div>
+      <img data-photo src="assets/gallery-8.jpg" alt="婚纱照 8" />
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 · THE INVITATION ============ -->
+<section class="act act-invite" id="invitation">
+  <div class="invite-card reveal">
+    <span class="act-tag">05 · The Invitation</span>
+    <h2>The Wedding</h2>
+    <div class="invite-zh">诚挚邀请您莅临我们的婚礼</div>
+
+    <div class="invite-date">
+      <div class="day">14</div>
+      <div class="ym">NOVEMBER · 2026</div>
+    </div>
+    <div class="invite-week" id="weekday">SATURDAY · 星期六</div>
+
+    <div class="invite-line"></div>
+
+    <div class="invite-venue">
+      <span id="namesLine">新郎 · 新娘</span>
+      <small id="timeLine">婚礼仪式时间：待填写</small>
+      山东 · 威海荣成<br />
+      荣成华星宾馆 · 户外草坪
+    </div>
+
+    <a class="btn-map" id="mapBtn" href="#" target="_blank" rel="noopener">婚礼地点导航</a>
+    <div class="invite-note">We Would Love To See You There.</div>
+  </div>
+
+  <!-- 赴约指南 -->
+  <div class="guide reveal">
+    <div class="guide-title">赴 约 指 南</div>
+
+    <div class="guide-item">
+      <button class="guide-head">11月13日 · 亲友抵达<span class="arrow">▼</span></button>
+      <div class="guide-body"><div class="inner" id="guideArrive">
+        建议外地亲友提前一天抵达荣成。住宿与接待安排将在婚礼前另行通知，也可直接联系我们协助预订。
+      </div></div>
+    </div>
+
+    <div class="guide-item">
+      <button class="guide-head">11月14日 · 婚礼当天<span class="arrow">▼</span></button>
+      <div class="guide-body"><div class="inner" id="guideDay">
+        地点：荣成华星宾馆 · 户外草坪<br />
+        仪式时间：待填写<br />
+        联系人：待填写<br />
+        点击上方「婚礼地点导航」可一键跳转地图。
+      </div></div>
+    </div>
+
+    <div class="guide-item">
+      <button class="guide-head">交通与住宿指引<span class="arrow">▼</span></button>
+      <div class="guide-body"><div class="inner" id="guideTraffic">
+        高铁：乘至「荣成站」，出站后打车前往酒店。<br />
+        自驾：导航搜索「荣成华星宾馆」。<br />
+        住宿：酒店及周边住宿信息可联系我们获取推荐。
+      </div></div>
+    </div>
+  </div>
+
+  <!-- 宾客回执 -->
+  <div class="rsvp reveal">
+    <p>期待你的到来。如方便，请告诉我们你是否出席：</p>
+    <a class="btn-rsvp" id="rsvpBtn" href="#">填写回执</a>
+  </div>
+</section>
+
+<!-- ============ 06 · THE ENDING ============ -->
+<section class="act act-ending" id="ending">
+  <div class="words">
+    <p class="reveal-line">山海很远，相见值得。</p>
+    <p class="reveal-line">谢谢你，来见证我们的这一天。</p>
+  </div>
+  <div class="tail reveal">
+    2026 . 11 . 14<br />
+    <span class="names" id="endingNames">新郎 & 新娘</span><br />
+    WEIHAI · RONGCHENG
+  </div>
+</section>
+
+<footer>A LOVE STORY, BY THE SEA · 2026</footer>
+
+<audio id="bgm" loop preload="none" src="assets/bgm.mp3"></audio>
+
+<script>
+/* ============================================================
+   集中配置：上线前只需要改这里
+   ============================================================ */
+const CONFIG = {
+  groomName: "新郎",            // 新郎姓名
+  brideName: "新娘",            // 新娘姓名
+  ceremonyTime: "待填写",        // 例："上午 11:18"
+  contact: "待填写",             // 例："张先生 138-0000-0000"
+  mapKeyword: "荣成华星宾馆",     // 地图搜索关键词
+  mapCity: "威海",
+  rsvpUrl: "",                   // 回执表单链接（如腾讯问卷/金数据），留空则提示微信联系
+};
+
+/* ---------- 应用配置 ---------- */
+(function applyConfig() {
+  const names = `${CONFIG.groomName} · ${CONFIG.brideName}`;
+  document.getElementById("namesLine").textContent = names;
+  document.getElementById("endingNames").textContent = `${CONFIG.groomName} & ${CONFIG.brideName}`;
+  document.getElementById("timeLine").textContent = `婚礼仪式时间：${CONFIG.ceremonyTime}`;
+  document.getElementById("guideDay").innerHTML =
+    `地点：荣成华星宾馆 · 户外草坪<br>仪式时间：${CONFIG.ceremonyTime}<br>联系人：${CONFIG.contact}<br>点击上方「婚礼地点导航」可一键跳转地图。`;
+
+  // 2026-11-14 是星期六，按配置兜底计算一次
+  const d = new Date(2026, 10, 14);
+  const weeks = ["SUNDAY · 星期日","MONDAY · 星期一","TUESDAY · 星期二","WEDNESDAY · 星期三","THURSDAY · 星期四","FRIDAY · 星期五","SATURDAY · 星期六"];
+  document.getElementById("weekday").textContent = weeks[d.getDay()];
+
+  // 高德地图搜索链接（微信内可打开，支持跳转 App）
+  document.getElementById("mapBtn").href =
+    "https://uri.amap.com/search?keyword=" + encodeURIComponent(CONFIG.mapKeyword) +
+    "&city=" + encodeURIComponent(CONFIG.mapCity);
+
+  // 回执
+  const rsvp = document.getElementById("rsvpBtn");
+  if (CONFIG.rsvpUrl) {
+    rsvp.href = CONFIG.rsvpUrl;
+    rsvp.target = "_blank";
+    rsvp.rel = "noopener";
+  } else {
+    rsvp.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("请直接微信告诉我们：是否出席、预计抵达日期。期待你的回复！");
+    });
+  }
+})();
+
+/* ---------- 照片加载：成功则淡入，失败则保留占位提示 ---------- */
+document.querySelectorAll("img[data-photo]").forEach((img) => {
+  img.addEventListener("load", () => {
+    if (img.naturalWidth > 0) img.classList.add("loaded");
+  });
+  img.addEventListener("error", () => img.remove());
+});
+
+/* ---------- 滚动显现 ---------- */
+const io = new IntersectionObserver((entries) => {
+  entries.forEach((en) => {
+    if (en.isIntersecting) {
+      en.target.classList.add("in");
+      io.unobserve(en.target);
+    }
+  });
+}, { threshold: 0.18 });
+document.querySelectorAll(".reveal, .reveal-line").forEach((el, i) => {
+  // 同组文字逐行延迟
+  if (el.classList.contains("reveal-line")) {
+    el.style.transitionDelay = (i % 6) * 0.12 + "s";
+  }
+  io.observe(el);
+});
+
+/* ---------- 手风琴 ---------- */
+document.querySelectorAll(".guide-head").forEach((head) => {
+  head.addEventListener("click", () => {
+    const item = head.parentElement;
+    const body = item.querySelector(".guide-body");
+    const open = item.classList.toggle("open");
+    body.style.maxHeight = open ? body.scrollHeight + "px" : "0";
+  });
+});
+
+/* ---------- 快捷入口 ---------- */
+document.getElementById("infoBtn").addEventListener("click", () => {
+  document.getElementById("invitation").scrollIntoView({ behavior: "smooth" });
+});
+
+/* ---------- 音乐：默认安静，点击开启 ---------- */
+(function music() {
+  const btn = document.getElementById("musicBtn");
+  const bgm = document.getElementById("bgm");
+  let available = true;
+  bgm.addEventListener("error", () => {
+    available = false;
+    btn.style.opacity = "0.45";
+  });
+  btn.addEventListener("click", () => {
+    if (!available) {
+      alert("音乐文件待添加：把 bgm.mp3 放进 assets 文件夹即可。");
+      return;
+    }
+    if (bgm.paused) {
+      bgm.play().then(() => btn.classList.add("playing")).catch(() => {});
+    } else {
+      bgm.pause();
+      btn.classList.remove("playing");
+    }
+  });
+})();
+</script>
+</body>
+</html>
