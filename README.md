@@ -36,8 +36,8 @@ const CONFIG = {
   brideName: "张靖",
   ceremonyTime: "上午 10:58",
   contacts: [                       // 电话自动变成一键拨号
-    { name: "高嘉琪", tel: "15550070122", wechat: "" },  // ← wechat 待填写
-    { name: "张靖",   tel: "13061243813", wechat: "" },  // ← wechat 待填写
+    { name: "高嘉琪", tel: "15550070122", wechat: "Kdnsna7" },
+    { name: "张靖",   tel: "13061243813", wechat: "" },  // 留空 = 不显示微信行
   ],
   mapKeyword: "荣成华星宾馆",
   mapCity: "威海",
