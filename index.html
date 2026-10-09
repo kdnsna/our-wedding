@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#F5F0E8" />
 <title>我们的婚礼 · A Love Story, By the Sea · 2026.11.14</title>
-<meta name="description" content="从不同的地方出发，终于走到同一段人生。2026.11.14，我们在荣成，等你赴约。" />
+<meta name="description" content="从黄河边到泰山下，从一座城到一片海。2026.11.14，我们在荣成，等你赴约。" />
 <meta property="og:title" content="我们的婚礼邀请 · 2026.11.14 威海荣成" />
-<meta property="og:description" content="山海很远，相见值得。诚挚邀请您莅临我们的婚礼。" />
+<meta property="og:description" content="山海很远，相见值得。2026.11.14，我们在荣成等你赴约。" />
 <meta property="og:image" content="assets/share-cover.jpg" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23773747'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23F5F0E8' font-family='serif'%3E%26%3C/text%3E%3C/svg%3E" />
 <style>
@@ -206,14 +206,22 @@ img { display: block; max-width: 100%; }
   opacity: 0;
   animation: fadeIn 1.6s ease 1.8s forwards;
 }
-@keyframes fadeIn { to { opacity: 1; } }
 .opening-copy .sub span { margin: 0 10px; color: var(--wine); }
+.opening-copy .sub2 {
+  margin-top: 16px;
+  font-size: 11.5px;
+  letter-spacing: 0.32em;
+  color: rgba(119, 55, 71, 0.8);
+  opacity: 0;
+  animation: fadeIn 1.8s ease 2.6s forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
 .scroll-hint {
   position: absolute;
   left: 50%; bottom: 34px;
   transform: translateX(-50%);
   opacity: 0;
-  animation: fadeIn 1.5s ease 2.6s forwards;
+  animation: fadeIn 1.5s ease 3.2s forwards;
 }
 .scroll-hint i {
   display: block;
@@ -247,6 +255,7 @@ img { display: block; max-width: 100%; }
   color: var(--graphite);
 }
 .story-text p { margin-bottom: 4px; }
+.story-text .em { color: var(--wine); }
 .story-names {
   margin-top: 34px;
   display: flex;
@@ -319,6 +328,7 @@ img { display: block; max-width: 100%; }
   line-height: 2.25;
   letter-spacing: 0.12em;
 }
+.journey-copy .lead { font-size: clamp(13px, 3.6vw, 16px); opacity: 0.92; letter-spacing: 0.3em; margin-bottom: 18px; }
 
 /* ============ 04 THE GALLERY ============ */
 .act-gallery {
@@ -644,6 +654,7 @@ footer {
   <div class="opening-copy" id="openingCopy">
     <h1>A LOVE STORY<br />BY THE SEA</h1>
     <div class="sub">2026.11.14 <span>·</span> WEIHAI · RONGCHENG</div>
+    <div class="sub2">一封写给山海，也写给你的邀请函</div>
   </div>
   <div class="scroll-hint"><i></i></div>
 </section>
@@ -660,10 +671,12 @@ footer {
     <img data-photo src="assets/story-2.jpg" alt="婚纱细节照" />
   </div>
   <div class="story-text">
-    <p class="reveal-line">我们从不同的地方出发，</p>
-    <p class="reveal-line">在同一座城市相伴。</p>
-    <p class="reveal-line">直到决定，把往后的日子</p>
-    <p class="reveal-line">写成同一个故事。</p>
+    <p class="reveal-line">一个从<span class="em">黄河边</span>来，</p>
+    <p class="reveal-line">一个在<span class="em">泰山脚下</span>长大。</p>
+    <p class="reveal-line">隔着半座山东的人海，</p>
+    <p class="reveal-line">我们在同一座城市，停下脚步。</p>
+    <p class="reveal-line">后来才懂——</p>
+    <p class="reveal-line">所有的出发，都是为了相遇。</p>
   </div>
   <div class="story-names reveal">滨州博兴 <span style="color:var(--mist-deep)">×</span> 泰安新泰 · 相伴于济南</div>
 </section>
@@ -677,6 +690,7 @@ footer {
   <div class="sea-wave w2"></div>
   <div class="journey-copy" id="journeyCopy">
     <div class="act-tag reveal">03 · The Journey</div>
+    <p class="lead reveal-line">山海之间，天地为证</p>
     <p class="reveal-line">这一次，</p>
     <p class="reveal-line">我们想邀请你，</p>
     <p class="reveal-line">一起奔赴山海。</p>
@@ -708,7 +722,7 @@ footer {
       <div class="ph-label">gallery-5<small>assets/gallery-5.jpg</small></div>
       <img data-photo src="assets/gallery-5.jpg" alt="婚纱照 5" />
     </div>
-    <div class="g-phrase reveal-line">To Have and To Hold.</div>
+    <div class="g-phrase reveal-line">From This Day Forward.</div>
     <div class="photo g-item wide reveal">
       <div class="ph-label">gallery-6 · 宽幅<small>assets/gallery-6.jpg</small></div>
       <img data-photo src="assets/gallery-6.jpg" alt="婚纱照 6" />
@@ -730,7 +744,7 @@ footer {
     <div class="seal" id="seal">新 · 新</div>
     <div class="invite-families">TOGETHER WITH OUR FAMILIES</div>
     <h2>The Wedding</h2>
-    <div class="invite-zh">诚挚邀请您莅临我们的婚礼</div>
+    <div class="invite-zh">诚挚邀请您，见证我们的婚礼</div>
 
     <div class="invite-date">
       <div class="day">14</div>
@@ -763,7 +777,8 @@ footer {
     <div class="guide-item">
       <button class="guide-head">11月13日 · 亲友抵达<span class="chev"></span></button>
       <div class="guide-body"><div class="inner" id="guideArrive">
-        建议外地亲友提前一天抵达荣成。住宿与接待安排将在婚礼前另行通知，也可直接联系我们协助预订。
+        若你提前一天抵达，荣成的海与落日，值得一个傍晚。<br />
+        住宿与接待安排，我们会在婚礼前另行通知；也欢迎随时联系我们，协助你预订。
       </div></div>
     </div>
 
@@ -773,7 +788,7 @@ footer {
         地点：荣成华星宾馆 · 户外草坪<br />
         仪式时间：待填写<br />
         联系人：待填写<br />
-        点击上方「婚礼地点导航」可一键跳转地图。
+        点击上方「婚礼地点导航」，即可一键前往。
       </div></div>
     </div>
 
@@ -782,14 +797,14 @@ footer {
       <div class="guide-body"><div class="inner" id="guideTraffic">
         高铁：乘至「荣成站」，出站后打车前往酒店。<br />
         自驾：导航搜索「荣成华星宾馆」。<br />
-        住宿：酒店及周边住宿信息可联系我们获取推荐。
+        住宿：酒店及周边的住宿建议，联系我们即可获取。
       </div></div>
     </div>
   </div>
 
   <!-- 宾客回执 -->
   <div class="rsvp reveal">
-    <p>期待你的到来。如方便，请告诉我们你是否出席：</p>
+    <p>愿与你相见。若方便，请告诉我们，能否赴约：</p>
     <a class="btn-rsvp" id="rsvpBtn" href="#">填写回执</a>
   </div>
 </section>
@@ -798,7 +813,8 @@ footer {
 <section class="act act-ending" id="ending">
   <div class="words">
     <p class="reveal-line">山海很远，相见值得。</p>
-    <p class="reveal-line">谢谢你，来见证我们的这一天。</p>
+    <p class="reveal-line">谢谢你远道而来，</p>
+    <p class="reveal-line">见证我们，成为彼此的归处。</p>
   </div>
   <svg class="ending-wave reveal" width="120" height="14" viewBox="0 0 120 14" fill="none" aria-hidden="true">
     <path d="M2 8 Q 12 2, 22 8 T 42 8 T 62 8 T 82 8 T 102 8 T 122 8" stroke="#7FA3B0" stroke-width="1.2" stroke-linecap="round"/>
@@ -843,7 +859,7 @@ window.addEventListener("DOMContentLoaded", () => {
     CONFIG.groomName.charAt(0) + " · " + CONFIG.brideName.charAt(0);
   document.getElementById("timeLine").textContent = `婚礼仪式时间：${CONFIG.ceremonyTime}`;
   document.getElementById("guideDay").innerHTML =
-    `地点：荣成华星宾馆 · 户外草坪<br>仪式时间：${CONFIG.ceremonyTime}<br>联系人：${CONFIG.contact}<br>点击上方「婚礼地点导航」可一键跳转地图。`;
+    `地点：荣成华星宾馆 · 户外草坪<br>仪式时间：${CONFIG.ceremonyTime}<br>联系人：${CONFIG.contact}<br>点击上方「婚礼地点导航」，即可一键前往。`;
 
   // 2026-11-14 是星期六，按日期兜底计算一次
   const d = new Date(2026, 10, 14);
@@ -864,7 +880,7 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     rsvp.addEventListener("click", (e) => {
       e.preventDefault();
-      alert("请直接微信告诉我们：是否出席、预计抵达日期。期待你的回复！");
+      alert("请直接微信告诉我们：能否出席、预计哪天抵达。期待你的回复！");
     });
   }
 })();
