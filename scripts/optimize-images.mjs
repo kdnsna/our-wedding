@@ -24,10 +24,16 @@ const PLAN = {
   "gallery-6": { webp: [750, 1200], jpg: 1200 },
   "gallery-7": { webp: [600, 1200], jpg: 1200 },
   "gallery-8": { webp: [600, 1200], jpg: 1200 },
+  // 第三幕「奔赴山海」：自己拍的荣成海景（华星桥 / 海湾栏杆）
+  "journey-1": { webp: [960, 1440], jpg: 1200 },
+  "journey-2": { webp: [540, 1080], jpg: 1080 },
 };
 
 mkdirSync("assets/img", { recursive: true });
+// 只跑指定的图：node scripts/optimize-images.mjs journey-1 journey-2
+const only = process.argv.slice(2);
 for (const [name, p] of Object.entries(PLAN)) {
+  if (only.length && !only.includes(name)) continue;
   const src = `assets/${name}.jpg`;
   for (const w of p.webp) {
     const out = `assets/img/${name}-${w}.webp`;
