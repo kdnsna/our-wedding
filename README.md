@@ -17,54 +17,61 @@ npm run dev
 
 ## 上线前要做的事（按顺序）
 
-### 1. 替换照片（assets/ 目录）
+### 1. 照片（assets/ 目录）
 
-| 文件名 | 用途 | 建议 |
-|---|---|---|
-| `hero.jpg` | 第一幕主视觉双人照 | 竖构图最佳，人物完整、有留白 |
-| `story-1.jpg` | 第二幕大图 | 有故事感的双人照，竖构图 |
-| `story-2.jpg` | 第二幕细节照 | 牵手、眼神、互动特写，方形 |
-| `gallery-1.jpg` ~ `gallery-8.jpg` | 第四幕画廊 | 景别交替；3、6 为宽幅横图 |
-| `share-cover.jpg` | 微信分享封面 | 方形，含双人照为佳 |
-| `bgm.mp3` | 背景音乐（可选） | 不点不播，用户主动开启 |
+`assets/*.jpg` 是母版，页面实际用的是 `assets/img/` 里压缩好的版本（两档宽度 WebP + 一张 JPEG 兜底）。
+换照片时：替换 `assets/` 里同名的 jpg，然后运行
 
-- 照片放进去就自动显示；缺哪张，对应位置会显示占位提示，不会破版。
-- 建议压缩到每张 500KB 以内（可用 squoosh.app 转 WebP 后改后缀同名引用，或直接用 JPG）。
+```bash
+npm i --no-save sharp@0.33 && node scripts/optimize-images.mjs
+```
+
+首屏 hero 会被预加载并优先下载，其余照片都是滚动到附近才加载。`photos-original/` 是原片存档，页面不引用。
 
 ### 2. 修改文字配置（index.html 底部 `CONFIG`）
 
 ```js
 const CONFIG = {
-  groomName: "新郎",          // ← 改名字
-  brideName: "新娘",
-  ceremonyTime: "待填写",      // ← 例："上午 11:18"
-  contact: "待填写",           // ← 例："张先生 138-0000-0000"
-  mapKeyword: "荣成华星宾馆",  // ← 地图搜索关键词
+  groomName: "高嘉琪",
+  brideName: "张靖",
+  ceremonyTime: "上午 10:58",
+  contacts: [                       // 电话自动变成一键拨号
+    { name: "高嘉琪", tel: "15550070122", wechat: "Kdnsna7" },
+    { name: "张靖",   tel: "13061243813", wechat: "" },  // 留空 = 不显示微信行
+  ],
+  mapKeyword: "荣成华星宾馆",
   mapCity: "威海",
-  rsvpUrl: "",                 // ← 回执表单链接（腾讯问卷/金数据），留空则提示微信联系
+  music: "",                        // 留空 = 不显示 ♪；见下方「背景音乐」
+  share: …                          // 读取 #share-config，见下方「分享卡片」
 };
 ```
 
-酒店准确名称与定位请在上线前核实（设计方案中标注"待核实"）。
+- 「回复赴约」按钮会打开页内抽屉：每位联系人一个「拨打」按钮；填了 `wechat` 才会出现「复制微信号」。
 
-### 3. 部署（让亲友能用链接打开）
+### 3. 背景音乐（待定）
 
-任选其一：
+把 mp3 放进 `public/`（例如 `public/bgm.mp3`），再把 `CONFIG.music` 改成 `"bgm.mp3"`。
+没配置时 ♪ 按钮不出现；文件加载失败也会自动收起，不弹任何提示。不自动播放。
 
-- **Vercel / Netlify**：拖入本目录即得 `https://` 链接，免费。
-- **GitHub Pages**：push 到 GitHub 后在仓库 Settings → Pages 开启。
-- **腾讯云 COS / 阿里云 OSS**：静态网站托管，国内访问更快，绑定备案域名后微信内打开体验最佳。
+### 4. 分享卡片（微信 / 以后的公众号）
 
-### 4. 微信分享卡片
+只改 `index.html` 里 `<script id="share-config">` 这一份（标题、摘要、封面绝对地址、链接）。
+构建时会自动写进 `<title>`、`og:*` 和 `itemprop` 标签；页面脚本里也能用 `CONFIG.share`，以后接公众号 JS-SDK（`updateAppMessageShareData`）直接用这份数据。
+封面文件是 `public/share-cover.jpg`（1080×1080），构建后位于站点根目录。
 
-微信内分享的标题/摘要取自页面 `<meta>` 标签，封面取 `assets/share-cover.jpg`。
-如需自定义"转发给好友"的缩略卡片（JS-SDK 的 `updateAppMessageShareData`），需要已认证公众号 + 后端签名，属可选增强，未配置时微信会使用页面默认抓取。
+### 5. 部署
+
+push 到 `main` 会自动构建并发布到 GitHub Pages（`.github/workflows/deploy.yml`）。**main 上的改动会立刻上线**，改版请先在分支上做。
+
+## 字体
+
+马善政体（中文情绪句）、Cormorant Garamond（英文标题与数字）、Pinyon Script（英文图注）都自托管在 `assets/fonts/`，均为 SIL OFL 1.1，许可证文件放在同目录。英文两款只保留基本拉丁字符，合计约 35KB。
 
 ## 六幕结构
 
-01 The Opening 电影开场 → 02 Our Story 关于我们 → 03 The Journey 奔赴山海 → 04 The Gallery 婚纱影像 → 05 The Invitation 正式邀请（含赴约指南 + 回执）→ 06 The Ending 尾声致谢
+01 The Opening 电影开场 → 02 Our Story 关于我们 → 03 The Journey 奔赴山海 → 04 The Gallery 婚纱影像 → 05 The Invitation 正式邀请（含赴约指南 + 回复赴约）→ 06 The Ending 尾声致谢
 
-右下角常驻「婚礼信息」快捷入口，宾客可随时跳到第五幕，不必看完动画。
+右下角「婚礼信息」快捷入口，宾客可随时跳到第五幕，不必看完动画；到了第五幕之后自动收起，不挡正文。
 
 ## 当前页面说明（2026-10-09）
 
