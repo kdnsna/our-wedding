@@ -31,7 +31,33 @@ function shareMeta() {
   };
 }
 
+/**
+ * Vite 不处理 <link imagesrcset>，构建后把首屏预加载里的路径换成带 hash 的实际文件。
+ */
+function preloadSrcset() {
+  return {
+    name: "preload-imagesrcset",
+    transformIndexHtml: {
+      order: "post",
+      handler(html, ctx) {
+        if (!ctx.bundle) return html; // dev：原路径即可
+        const files = Object.keys(ctx.bundle);
+        return html.replace(/imagesrcset="([^"]+)"/g, (_, set) => {
+          const out = set.split(",").map((part) => {
+            const [url, w] = part.trim().split(/\s+/);
+            const m = url.match(/([^/]+)\.(\w+)$/);
+            const hit = m && files.find((f) => new RegExp(`^assets/${m[1]}-[\\w-]{8}\\.${m[2]}$`).test(f));
+            if (!hit) throw new Error(`preload 找不到打包后的 ${url}`);
+            return `./${hit} ${w}`;
+          });
+          return `imagesrcset="${out.join(", ")}"`;
+        });
+      },
+    },
+  };
+}
+
 export default defineConfig({
   base: "./",
-  plugins: [shareMeta()],
+  plugins: [shareMeta(), preloadSrcset()],
 });

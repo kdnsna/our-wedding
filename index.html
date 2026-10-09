@@ -19,6 +19,10 @@
 <meta itemprop="description" content="%SHARE_DESC%" />
 <meta itemprop="image" content="%SHARE_IMAGE%" />
 <meta name="twitter:card" content="summary" />
+<!-- 首屏大图最先下载（构建时自动换成带 hash 的文件名） -->
+<link rel="preload" as="image" type="image/webp" fetchpriority="high"
+  imagesrcset="assets/img/hero-750.webp 750w, assets/img/hero-1535.webp 1535w"
+  imagesizes="(max-aspect-ratio: 2/3) 67vh, 100vw" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23773747'/%3E%3Ctext x='32' y='43' font-size='30' text-anchor='middle' fill='%23F5F0E8' font-family='serif'%3E%26%3C/text%3E%3C/svg%3E" />
 <style>
 /* ============================================================
@@ -1000,7 +1004,7 @@ footer {
 <!-- ============ 01 · THE OPENING ============ -->
 <section class="act act-opening" id="opening">
   <div class="photo">
-    <img data-photo src="assets/hero.jpg" alt="主视觉双人婚纱照" />
+    <picture><source type="image/webp" srcset="assets/img/hero-750.webp 750w, assets/img/hero-1535.webp 1535w" sizes="(max-aspect-ratio: 2/3) 67vh, 100vw" /><img data-photo src="assets/img/hero.jpg" fetchpriority="high" decoding="async" alt="主视觉双人婚纱照" /></picture>
   </div>
   <div class="veil"></div>
   <div class="bokeh"><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -1018,10 +1022,10 @@ footer {
 <section class="act act-story" id="story">
   <div class="act-tag reveal">02 · Our Story</div>
   <div class="photo story-photo-main reveal">
-    <img data-photo src="assets/story-1.jpg" alt="婚纱照" />
+    <picture><source type="image/webp" srcset="assets/img/story-1-750.webp 750w, assets/img/story-1-1200.webp 1200w" sizes="(min-width: 640px) 588px, calc(100vw - 52px)" /><img data-photo src="assets/img/story-1.jpg" loading="lazy" decoding="async" alt="婚纱照" /></picture>
   </div>
   <div class="photo story-photo-detail reveal">
-    <img data-photo src="assets/story-2.jpg" alt="婚纱细节照" />
+    <picture><source type="image/webp" srcset="assets/img/story-2-540.webp 540w, assets/img/story-2-1080.webp 1080w" sizes="(min-width: 640px) 306px, calc(52vw - 27px)" /><img data-photo src="assets/img/story-2.jpg" loading="lazy" decoding="async" alt="婚纱细节照" /></picture>
   </div>
   <div class="story-text">
     <p class="reveal-line">一个从<span class="em">黄河边</span>来，</p>
@@ -1057,13 +1061,13 @@ footer {
   <div class="g-grid">
     <figure class="g-item g-a reveal">
       <div class="matte r-l">
-        <div class="photo"><img data-photo src="assets/gallery-1.jpg" alt="教堂拱窗·回眸" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-1-600.webp 600w, assets/img/gallery-1-1200.webp 1200w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-1.jpg" loading="lazy" decoding="async" alt="教堂拱窗·回眸" /></picture></div>
         <figcaption>The Glance</figcaption>
       </div>
     </figure>
     <figure class="g-item g-b reveal">
       <div class="matte r-r">
-        <div class="photo"><img data-photo src="assets/gallery-2.jpg" alt="暮色之吻" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-2-600.webp 600w, assets/img/gallery-2-1200.webp 1200w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-2.jpg" loading="lazy" decoding="async" alt="暮色之吻" /></picture></div>
         <figcaption>At Dusk</figcaption>
       </div>
     </figure>
@@ -1071,17 +1075,17 @@ footer {
     <div class="g-phrase reveal-line">Every Moment, With You.</div>
 
     <div class="g-item g-bleed reveal">
-      <div class="photo"><img data-photo data-speed="0.09" src="assets/gallery-3.jpg" alt="草地山海·头纱飞扬" /></div>
+      <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-3-750.webp 750w, assets/img/gallery-3-1200.webp 1200w" sizes="(min-width: 760px) 874px, 115vw" /><img data-photo data-speed="0.09" src="assets/img/gallery-3.jpg" loading="lazy" decoding="async" alt="草地山海·头纱飞扬" /></picture></div>
     </div>
 
     <figure class="g-item g-c reveal">
       <div class="matte r-r">
-        <div class="photo"><img data-photo src="assets/gallery-4.jpg" alt="棚拍全身合影" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-4-540.webp 540w, assets/img/gallery-4-1080.webp 1080w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-4.jpg" loading="lazy" decoding="async" alt="棚拍全身合影" /></picture></div>
       </div>
     </figure>
     <figure class="g-item g-d reveal">
       <div class="matte r-l">
-        <div class="photo"><img data-photo src="assets/gallery-5.jpg" alt="中式窗格·执扇" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-5-600.webp 600w, assets/img/gallery-5-1080.webp 1080w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-5.jpg" loading="lazy" decoding="async" alt="中式窗格·执扇" /></picture></div>
         <figcaption>Grace</figcaption>
       </div>
     </figure>
@@ -1089,18 +1093,18 @@ footer {
     <div class="g-phrase reveal-line">From This Day Forward.</div>
 
     <div class="g-item g-bleed reveal">
-      <div class="photo"><img data-photo data-speed="0.09" src="assets/gallery-6.jpg" alt="夕阳逆光剪影" /></div>
+      <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-6-750.webp 750w, assets/img/gallery-6-1200.webp 1200w" sizes="(min-width: 760px) 874px, 115vw" /><img data-photo data-speed="0.09" src="assets/img/gallery-6.jpg" loading="lazy" decoding="async" alt="夕阳逆光剪影" /></picture></div>
     </div>
 
     <figure class="g-item g-e reveal">
       <div class="matte r-l">
-        <div class="photo"><img data-photo src="assets/gallery-7.jpg" alt="教堂花海" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-7-600.webp 600w, assets/img/gallery-7-1200.webp 1200w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-7.jpg" loading="lazy" decoding="async" alt="教堂花海" /></picture></div>
         <figcaption>In Bloom</figcaption>
       </div>
     </figure>
     <figure class="g-item g-f reveal">
       <div class="matte r-r">
-        <div class="photo"><img data-photo src="assets/gallery-8.jpg" alt="中式回廊双人" /></div>
+        <div class="photo"><picture><source type="image/webp" srcset="assets/img/gallery-8-600.webp 600w, assets/img/gallery-8-1200.webp 1200w" sizes="(min-width: 760px) 400px, 56vw" /><img data-photo src="assets/img/gallery-8.jpg" loading="lazy" decoding="async" alt="中式回廊双人" /></picture></div>
         <figcaption>Side by Side</figcaption>
       </div>
     </figure>
@@ -1109,7 +1113,7 @@ footer {
 
 <!-- ============ 04.5 · 过场 ============ -->
 <section class="act interlude" id="interlude">
-  <div class="inter-bg"><img data-photo data-speed="0.12" src="assets/interlude.jpg" alt="草地山海" /></div>
+  <div class="inter-bg"><picture><source type="image/webp" srcset="assets/img/interlude-1200.webp 1200w, assets/img/interlude-1920.webp 1920w" sizes="(max-aspect-ratio: 10/9) 129vh, 116vw" /><img data-photo data-speed="0.12" src="assets/img/interlude.jpg" loading="lazy" decoding="async" alt="草地山海" /></picture></div>
   <div class="inter-veil"></div>
   <div class="inter-copy">
     <p class="reveal-line">所爱隔山海，</p>
@@ -1453,10 +1457,10 @@ window.addEventListener("DOMContentLoaded", () => {
 
 /* ---------- 照片加载：成功则淡入 ---------- */
 document.querySelectorAll("img[data-photo]").forEach((img) => {
-  img.addEventListener("load", () => {
-    if (img.naturalWidth > 0) img.classList.add("loaded");
-  });
+  const done = () => { if (img.naturalWidth > 0) img.classList.add("loaded"); };
+  img.addEventListener("load", done);
   img.addEventListener("error", () => img.remove());
+  if (img.complete) done();   // 首屏图可能在脚本执行前就已加载完（preload / 缓存）
 });
 
 /* ---------- 滚动显现 ---------- */
@@ -1503,7 +1507,7 @@ document.querySelectorAll(".reveal, .reveal-line").forEach((el, i) => {
     }
     // data-speed 照片视差
     speedImgs.forEach((img) => {
-      const host = img.parentElement.getBoundingClientRect();
+      const host = img.closest(".photo, .inter-bg").getBoundingClientRect();
       if (host.top < vh && host.bottom > 0) {
         const off = (host.top + host.height / 2 - vh / 2) * parseFloat(img.dataset.speed);
         img.style.transform = `translateY(${off.toFixed(1)}px) scale(1.15)`;
