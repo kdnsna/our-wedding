@@ -393,7 +393,17 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
   opacity: 0;
   animation: fadeIn 0.8s ease 0.15s forwards;
 }
-.opening-names span + span { margin-left: 0.9em; }
+.opening-amp {
+  display: inline-block;
+  margin: 0 0.5em 0 0.38em;
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 0.72em;
+  letter-spacing: 0;
+  color: var(--sea-deep);
+  opacity: 0.8;
+  transform: translateY(-0.06em);
+}
 .opening-copy h1 {
   font-family: var(--serif-en);
   font-weight: 400;
@@ -552,7 +562,7 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  object-position: 42% 50%;
+  object-position: 38% 55%;
   opacity: 0;
   transition: opacity 0.55s ease;
 }
@@ -1297,7 +1307,7 @@ footer .credit span { display: inline-block; }
   <div class="bokeh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="frame" aria-hidden="true"></div>
   <div class="opening-copy" id="openingCopy">
-    <div class="opening-names"><span id="openGroom">高嘉琪</span><span id="openBride">张靖</span></div>
+    <div class="opening-names"><span id="openGroom">高嘉琪</span><span class="opening-amp" aria-hidden="true">&amp;</span><span id="openBride">张靖</span></div>
     <h1>A LOVE STORY<br />BY THE SEA</h1>
     <div class="sub">2026.11.14 <span class="dot">·</span> <span class="place">WEIHAI · RONGCHENG</span></div>
     <div class="sub2">一封写给山海，也写给你的邀请函</div>
@@ -1336,7 +1346,7 @@ footer .credit span { display: inline-block; }
     <div class="journey-place reveal-line">RONGCHENG · BY THE SEA</div>
   </div>
   <div class="j-scene">
-    <div class="j-photo"><picture><source type="image/webp" srcset="assets/img/journey-1-960.webp 960w, assets/img/journey-1-1440.webp 1440w" sizes="(min-width: 620px) 620px, 100vw" /><img data-photo src="assets/img/journey-1.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="荣成海边：石拱桥下停着两只小船" /></picture></div>
+    <div class="j-photo"><picture><source type="image/webp" srcset="assets/img/journey-2-540.webp 540w, assets/img/journey-2-1080.webp 1080w" sizes="(min-width: 620px) 620px, 100vw" /><img data-photo src="assets/img/journey-2.jpg" width="1080" height="763" loading="lazy" decoding="async" alt="荣成海湾与白色栏杆" /></picture></div>
     <div class="j-waves" aria-hidden="true">
       <div class="j-wave l1"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C 240 14, 480 14, 720 30 S 1200 46, 1440 30 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 C 240 14, 480 14, 720 30 S 1200 46, 1440 30 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg></div>
       <div class="j-wave l2"><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32 C 180 20, 360 20, 540 31 S 900 44, 1080 32 S 1350 22, 1440 32 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg><svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 32 C 180 20, 360 20, 540 31 S 900 44, 1080 32 S 1350 22, 1440 32 L1440 60 L0 60 Z" fill="#FBF7EF"/></svg></div>
@@ -1346,7 +1356,7 @@ footer .credit span { display: inline-block; }
   <div class="j-after">
   <figure class="j-card reveal">
     <div class="matte r-r">
-      <div class="photo"><picture><source type="image/webp" srcset="assets/img/journey-2-540.webp 540w, assets/img/journey-2-1080.webp 1080w" sizes="(min-width: 600px) 260px, 46vw" /><img data-photo src="assets/img/journey-2.jpg" width="1080" height="763" loading="lazy" decoding="async" alt="荣成海湾与白色栏杆" /></picture></div>
+      <div class="photo"><picture><source type="image/webp" srcset="assets/img/journey-1-960.webp 960w, assets/img/journey-1-1440.webp 1440w" sizes="(min-width: 600px) 260px, 46vw" /><img data-photo src="assets/img/journey-1.jpg" width="1200" height="900" loading="lazy" decoding="async" alt="荣成海边：石拱桥下停着两只小船" /></picture></div>
       <figcaption>See you by the sea</figcaption>
     </div>
   </figure>
