@@ -385,19 +385,20 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
 .opening-names {
   font-family: var(--serif-cn);
   color: var(--wine-ink);
-  font-size: clamp(23px, 5.6vw, 29px);
-  letter-spacing: 0.14em;
-  line-height: 1.6;
-  margin-bottom: 14px;
+  font-size: clamp(32px, 8.6vw, 44px);
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  white-space: nowrap;
   opacity: 0;
   animation: fadeIn 0.8s ease 0.15s forwards;
 }
-.opening-cross { color: var(--sea-deep); margin: 0 12px; }
+.opening-names span + span { margin-left: 0.9em; }
 .opening-copy h1 {
   font-family: var(--serif-en);
   font-weight: 400;
   color: var(--wine-ink);
-  font-size: clamp(30px, 8.4vw, 58px);
+  font-size: clamp(22px, 6vw, 42px);
   letter-spacing: 0.18em;
   line-height: 1.35;
   opacity: 0;
@@ -409,7 +410,7 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
 }
 .opening-copy .sub {
   margin-top: 18px;
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.3em;
   color: var(--graphite);
   opacity: 0;
@@ -417,7 +418,7 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
 }
 .opening-copy .sub span { margin: 0 10px; color: var(--wine-ink); }
 @media (max-width: 480px) {
-  .opening-copy .sub { font-size: 12.5px; letter-spacing: 0.24em; line-height: 2.2; }
+  .opening-copy .sub { font-size: 11px; letter-spacing: 0.24em; line-height: 2.2; }
   .opening-copy .sub .place { display: block; }
   .opening-copy .sub span.dot { display: none; }
 }
@@ -1296,7 +1297,7 @@ footer .credit span { display: inline-block; }
   <div class="bokeh" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
   <div class="frame" aria-hidden="true"></div>
   <div class="opening-copy" id="openingCopy">
-    <div class="opening-names"><span id="openGroom">高嘉琪</span><span class="opening-cross" aria-hidden="true">×</span><span id="openBride">张靖</span></div>
+    <div class="opening-names"><span id="openGroom">高嘉琪</span><span id="openBride">张靖</span></div>
     <h1>A LOVE STORY<br />BY THE SEA</h1>
     <div class="sub">2026.11.14 <span class="dot">·</span> <span class="place">WEIHAI · RONGCHENG</span></div>
     <div class="sub2">一封写给山海，也写给你的邀请函</div>
