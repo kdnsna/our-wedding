@@ -242,6 +242,16 @@ body.info-away .fab-music { bottom: calc(16px + env(safe-area-inset-bottom)); }
   font-size: 15px;
 }
 .fab-music .note { display: inline-block; transition: transform 0.3s; }
+/* 自动翻阅：左下角小开关，不抢视线 */
+.fab-auto {
+  left: calc(16px + env(safe-area-inset-left)); right: auto;
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  width: 36px; height: 36px;
+  font-size: 11px;
+  opacity: 0.72;
+  box-shadow: none;
+}
+.fab-auto.on { opacity: 0.55; }
 /* 播放器已打开：♪ 换成酒红底，点它收起 / 展开小播放器 */
 .fab-music.on { background: var(--wine); color: var(--ivory); border-color: var(--wine); }
 .fab-music.on .note { animation: bob 1.6s ease-in-out infinite; }
@@ -400,8 +410,7 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
   font-style: italic;
   font-size: 0.72em;
   letter-spacing: 0;
-  color: var(--sea-deep);
-  opacity: 0.8;
+  color: #B08D57;
   transform: translateY(-0.06em);
 }
 .opening-copy h1 {
@@ -743,6 +752,24 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
   object-position: 40% 50%;
   transform: scale(1.16);
   will-change: transform;
+}
+/* 竖屏：不再裁成半身。照片按宽度 270% 贴底，两人全身完整入画（约 380×350px @390 宽），
+   上方用与照片顶端同色的天空渐变补齐，诗句只压在天空上 */
+@media (max-aspect-ratio: 1/1) {
+  .interlude { height: 100vh; height: 100svh; min-height: 640px; }
+  .inter-bg { background: linear-gradient(180deg, #4B79AD 0%, #4B79AD 40%, #4E7CB0 100%); }
+  .inter-bg img {
+    inset: auto;
+    left: 50%; bottom: 0;
+    width: 270%; max-width: none; height: auto;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 30%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 30%);
+    object-fit: initial;
+    transform: translateX(-49%);
+    will-change: auto;
+  }
+  .inter-fade { height: 36px; }
+  .interlude .inter-copy { justify-content: flex-start; padding-top: 13svh; }
 }
 .inter-veil {
   position: absolute; inset: 0;
@@ -1280,6 +1307,7 @@ footer .credit span { display: inline-block; }
 <body>
 
 <!-- 固定快捷入口 -->
+<button class="fab fab-auto" id="autoBtn" type="button" aria-label="暂停自动翻阅" aria-pressed="true" title="自动翻阅">❚❚</button>
 <button class="fab fab-music" id="musicBtn" type="button" aria-label="点击开启音乐" aria-controls="musicCard" aria-expanded="false" title="音乐" hidden>
   <span class="note" aria-hidden="true">♪&#xFE0E;</span>
 </button>
@@ -1423,7 +1451,7 @@ footer .credit span { display: inline-block; }
 
 <!-- ============ 04.5 · 过场 ============ -->
 <section class="act interlude" id="interlude">
-  <div class="inter-bg"><picture><source type="image/webp" srcset="assets/img/interlude-1200.webp 1200w, assets/img/interlude-1920.webp 1920w" sizes="(max-aspect-ratio: 10/9) 129vh, 116vw" /><img data-photo data-speed="0.12" data-scale="1.16" src="assets/img/interlude.jpg" width="1200" height="800" loading="lazy" decoding="async" alt="夕阳下牵手起舞的剪影" /></picture></div>
+  <div class="inter-bg"><picture><source type="image/webp" srcset="assets/img/interlude-1200.webp 1200w, assets/img/interlude-1920.webp 1920w" sizes="(max-aspect-ratio: 10/9) 129vh, 116vw" /><img data-photo src="assets/img/interlude.jpg" width="1200" height="800" loading="lazy" decoding="async" alt="夕阳下牵手起舞的剪影" /></picture></div>
   <div class="inter-veil" aria-hidden="true"></div>
   <div class="inter-fade" aria-hidden="true"></div>
   <div class="inter-copy">
@@ -2037,6 +2065,71 @@ window.addEventListener("resize", () => {
   document.getElementById("musicClose").addEventListener("click", unmount);
   // 提示条 8 秒后自动淡出，只留 ♪
   setTimeout(hideHint, 8000);
+})();
+
+/* ---------- 自动翻阅：每屏停留 ~6 秒后缓缓下移约 0.8 屏；宾客一碰就停，闲置 8 秒后继续，到底即止 ---------- */
+(function autoScroll() {
+  const btn = document.getElementById("autoBtn");
+  const DWELL = 6000, FIRST = 6500, IDLE = 8000, DUR = 1600;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let enabled = !reduce;          // 用户开关
+  let timer = 0, raf = 0, animating = false, lastSet = -1, done = false;
+  const atBottom = () => window.scrollY + innerHeight >= document.documentElement.scrollHeight - 4;
+  const busy = () => {
+    const a = document.activeElement;
+    if (a && /^(INPUT|TEXTAREA|SELECT|IFRAME)$/.test(a.tagName)) return true;
+    if (document.hidden) return true;
+    // 弹层 / 联系人面板 / 播放器展开时不动
+    return !!document.querySelector('.sheet.open, .sheet.is-open, .music-card:not(.is-min):not([hidden])') ||
+      getComputedStyle(document.body).overflow === "hidden";
+  };
+  function render() {
+    btn.textContent = enabled && !done ? "❚❚" : "▶";
+    btn.classList.toggle("on", enabled && !done);
+    btn.setAttribute("aria-pressed", String(enabled && !done));
+    btn.setAttribute("aria-label", enabled && !done ? "暂停自动翻阅" : "继续自动翻阅");
+  }
+  function stopAnim() { if (raf) cancelAnimationFrame(raf); raf = 0; animating = false; }
+  function schedule(ms) { clearTimeout(timer); if (enabled && !done) timer = setTimeout(step, ms); }
+  function step() {
+    if (!enabled || done) return;
+    if (busy()) return schedule(2000);
+    if (atBottom()) { done = true; render(); return; }
+    const from = window.scrollY;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const to = Math.min(max, from + Math.round(innerHeight * 0.8));
+    const t0 = performance.now();
+    animating = true;
+    const tick = (now) => {
+      const p = Math.min(1, (now - t0) / DUR);
+      const e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+      lastSet = Math.round(from + (to - from) * e);
+      window.scrollTo({ top: lastSet, behavior: "instant" });
+      if (p < 1) raf = requestAnimationFrame(tick);
+      else { raf = 0; animating = false; if (atBottom()) { done = true; render(); } else schedule(DWELL); }
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  // 宾客手动操作：立刻停，闲置后再继续
+  function interrupt() {
+    stopAnim();
+    if (enabled && !done) schedule(IDLE);
+  }
+  ["wheel", "touchstart", "pointerdown", "keydown"].forEach((ev) =>
+    window.addEventListener(ev, (e) => { if (e.target === btn) return; interrupt(); }, { passive: true }));
+  window.addEventListener("scroll", () => {
+    if (animating && Math.abs(window.scrollY - lastSet) > 2) interrupt();       // 动画中被拖动
+    if (done && !atBottom()) { /* 回到上面不自动重启，按 ▶ 才继续 */ }
+  }, { passive: true });
+  document.addEventListener("focusin", interrupt);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stopAnim(); else schedule(IDLE); });
+  btn.addEventListener("click", () => {
+    if (enabled && !done) { enabled = false; stopAnim(); clearTimeout(timer); }
+    else { enabled = true; done = false; schedule(1200); }
+    render();
+  });
+  render();
+  if (enabled) schedule(FIRST);
 })();
 </script>
 </body>
