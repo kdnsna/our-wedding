@@ -281,7 +281,7 @@ body.info-away .fab-music { bottom: calc(16px + env(safe-area-inset-bottom)); }
 .music-hint[hidden] { display: none; }
 .music-hint.is-gone { opacity: 0; transform: translateX(8px); pointer-events: none; }
 body.info-away .music-hint { bottom: calc(16px + env(safe-area-inset-bottom)); }
-/* 网易云小播放器卡片：在 ♪ 正上方。收起只是移出视线，iframe 不卸载，音乐不停 */
+/* 播放器卡片：在 ♪ 正上方。收起只是移出视线，音频不停 */
 .music-card {
   position: fixed;
   z-index: 91;
@@ -321,6 +321,7 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
 }
 .music-card-title b { font-family: var(--sans-cn); font-style: normal; font-weight: 400; letter-spacing: 0.08em; margin-right: 6px; }
 .music-card-tip { font-family: var(--sans-cn); font-size: 10.5px; letter-spacing: 0.08em; color: rgba(52, 58, 61, 0.55); padding: 0 8px 6px; }
+.music-card-tip[hidden] { display: none; }
 .music-card-btns { display: flex; gap: 4px; flex: none; }
 .music-card-btns button {
   border: 0; background: transparent; color: var(--wine-ink, var(--wine));
@@ -333,6 +334,45 @@ body.info-away .music-card { bottom: calc(72px + env(safe-area-inset-bottom)); }
   border: 0;
   margin: 0 auto;
   background: transparent;
+}
+/* 自托管音轨：一行极简走带（播放/暂停 + 细进度），视觉上仍然安静 */
+.music-local {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 8px 10px;
+}
+.music-local[hidden] { display: none; }
+.music-local .mt-btn {
+  flex: none;
+  width: 34px; height: 34px;
+  display: grid; place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(119, 55, 71, 0.28);
+  background: transparent;
+  color: var(--wine);
+  font-size: 11px;
+  cursor: pointer;
+}
+.music-local .mt-btn .icon-play { width: 0; height: 0; border-style: solid; border-width: 5.5px 0 5.5px 9px; border-color: transparent transparent transparent currentColor; }
+.music-local .mt-btn .icon-pause { width: 9px; height: 11px; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
+.music-local .mt-rail {
+  flex: 1; min-width: 0;
+  height: 2px;
+  background: rgba(119, 55, 71, 0.16);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.music-local .mt-bar {
+  display: block; height: 100%; width: 0%;
+  background: var(--gold);
+  transition: width 0.25s linear;
+}
+.music-local .mt-time {
+  flex: none;
+  font-family: var(--serif-en);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: rgba(52, 58, 61, 0.6);
 }
 
 /* ---------- 幕 通用 ---------- */
@@ -1357,7 +1397,7 @@ footer .credit span { display: inline-block; }
   <span class="note" aria-hidden="true">♪&#xFE0E;</span>
 </button>
 <button class="music-hint" id="musicHint" type="button" aria-controls="musicCard" hidden>点击开启音乐</button>
-<!-- 网易云外链小播放器：宾客点 ♪ 之后才插入 iframe（之前不会请求 music.163.com） -->
+<!-- 背景音乐小播放器：宾客点 ♪ 之后才开始下载音轨（首屏零音频请求） -->
 <div class="music-card is-min" id="musicCard" role="region" aria-label="背景音乐" aria-hidden="true" hidden>
   <div class="music-card-head">
     <div class="music-card-title" id="musicTitle"></div>
@@ -1366,7 +1406,18 @@ footer .credit span { display: inline-block; }
       <button type="button" id="musicClose" aria-label="关闭音乐">关闭</button>
     </div>
   </div>
-  <div class="music-card-tip" id="musicTip">没有声音的话，点一下下方播放器的 ▶&#xFE0E;</div>
+  <div class="music-card-tip" id="musicTip">没有声音的话，点一下下面的 ▶&#xFE0E;</div>
+  <audio id="bgm" loop preload="none" playsinline>
+    <source src="assets/audio/wedding-loop.m4a" type="audio/mp4" />
+    <source src="assets/audio/wedding-loop.mp3" type="audio/mpeg" />
+  </audio>
+  <div class="music-local" id="musicLocal">
+    <button class="mt-btn" id="musicPlay" type="button" aria-label="播放">
+      <span class="icon-pause" id="musicPlayIcon" aria-hidden="true"></span>
+    </button>
+    <span class="mt-rail" aria-hidden="true"><i class="mt-bar" id="musicBar"></i></span>
+    <span class="mt-time" id="musicTime" aria-hidden="true">0:00 / 1:36</span>
+  </div>
   <div id="musicSlot"></div>
 </div>
 <button class="fab fab-info" id="infoBtn" type="button">婚礼信息</button>
@@ -1727,14 +1778,22 @@ const CONFIG = {
   ],
   mapKeyword: "荣成华星宾馆",     // 地图搜索关键词
   mapCity: "威海",
-  // 背景音乐：用网易云官方外链播放器（不自托管音频）。设为 null = 不显示 ♪ 按钮。
-  // 不会自动出声：宾客点 ♪ 才插入播放器；iPhone / 微信里需要再点一下播放器自己的 ▶。
+  // 背景音乐。provider 改一行就能切换；设成 null = 不显示 ♪ 按钮。
+  //   "local"   → 自托管原创《奔赴山海》（96 秒无缝循环，assets/audio/）
+  //   "netease" → 网易云外链播放器（旧版，用 mp3Id）
+  // 不会自动出声：宾客点 ♪ 才开始下载并播放（微信 / iOS 都要求这个手势）。
   music: {
-    provider: "netease",
-    id: "1481390533",
-    title: "风带来的圣歌",
-    titleEn: "Windborne Hymn",
-    credit: "音乐：原神 OST《风带来的圣歌》· 陈致逸 / HOYO-MiX，© 米哈游版权所有",
+    provider: "local",
+    title: "奔赴山海",
+    titleEn: "To the Sea",
+    credit: "音乐：原创《奔赴山海》",
+    // —— local 用（音轨在页面里的 <audio id="bgm">，两个 <source> 由构建自动加 hash）——
+    seconds: 96,                  // 一个循环的长度：进度条按它算，解码后也按它裁掉编码器尾巴
+    // —— netease 用（切回旧版只需把上面的 provider 改成 "netease"）——
+    mp3Id: "1481390533",
+    neteaseTitle: "风带来的圣歌",
+    neteaseTitleEn: "Windborne Hymn",
+    neteaseCredit: "音乐：原神 OST《风带来的圣歌》· 陈致逸 / HOYO-MiX，© 米哈游版权所有",
   },
   // 分享信息（标题/摘要/封面/链接）统一读上方 #share-config，
   // 以后接公众号 JS-SDK 时直接用 CONFIG.share 即可。
@@ -2052,30 +2111,51 @@ window.addEventListener("resize", () => {
   }, { rootMargin: "0px 0px -12% 0px" }).observe(invite);
 })();
 
-/* ---------- 音乐：默认安静，点击开启（网易云外链播放器） ---------- */
+/* ---------- 背景音乐：默认安静，宾客点 ♪ 才下载并播放 ----------
+   provider: "local"（默认）→ 自托管原创《奔赴山海》，96.000 秒一个循环
+     · 播放走 WebAudio：整段解码后按 loop 精确循环，接缝在采样级对齐。
+       实测（Chromium，ScriptProcessor 取样）：<audio loop> 每绕一圈会留下约 10ms 的空档，
+       解码后的 AudioBuffer 循环则完全连续，所以能用 AudioContext 就用它。
+       AAC / MP3 解码后尾部会多出十几毫秒编码器补的静音，这里按 96.000 秒裁掉，接缝才对得上。
+     · AudioContext 不可用或解码失败时，退回 <audio loop>（每圈可能有极轻的接缝），
+       并用 ended 事件兜住个别 WebView 里 loop 失效的情况。
+   provider: "netease" → 旧版网易云外链播放器，逻辑原样保留，改这一行就能切回。 */
 (function music() {
   const M = CONFIG.music;
-  if (!M || M.provider !== "netease" || !M.id) return;   // 没配置音乐：♪ 按钮保持隐藏
+  if (!M) return;                                        // 没配置音乐：♪ 按钮保持隐藏
+  const local = (M.provider || "local") === "local";
+  const bgm = document.getElementById("bgm");
+  if (local ? !bgm : !(M.mp3Id || M.id)) return;          // 没音轨 / 没配 id：♪ 按钮保持隐藏
+
   const btn = document.getElementById("musicBtn");
   const hint = document.getElementById("musicHint");
   const card = document.getElementById("musicCard");
   const slot = document.getElementById("musicSlot");
+  const tip = document.getElementById("musicTip");
   const credit = document.getElementById("musicCredit");
   const titleEl = document.getElementById("musicTitle");
-  titleEl.append(Object.assign(document.createElement("b"), { textContent: M.title }), M.titleEn);
-  // 署名按「，」分两段，各自不拆行，窄屏上不会把「米哈游」断开
-  (M.credit.match(/[^，]+，?/g) || []).forEach((part) => {
+  const localRow = document.getElementById("musicLocal");
+  const playBtn = document.getElementById("musicPlay");
+  const playIcon = document.getElementById("musicPlayIcon");
+  const bar = document.getElementById("musicBar");
+  const timeEl = document.getElementById("musicTime");
+
+  const title = local ? M.title : M.neteaseTitle || M.title;
+  const titleEn = local ? M.titleEn : M.neteaseTitleEn || M.titleEn;
+  titleEl.append(Object.assign(document.createElement("b"), { textContent: title }), titleEn || "");
+  // 署名按「，」分两段，各自不拆行，窄屏上不会把词断开
+  (((local ? M.credit : M.neteaseCredit || M.credit) || "").match(/[^，]+，?/g) || []).forEach((part) => {
     const span = document.createElement("span");
     span.textContent = part;
     credit.appendChild(span);
   });
-  credit.hidden = false;
+  credit.hidden = credit.childElementCount === 0;
   btn.hidden = false;
   hint.hidden = false;
   card.hidden = false;
   document.body.classList.add("has-music");
 
-  let frame = null, hintTimer = 0;
+  let hintTimer = 0;
   const hideHint = () => {
     if (hint.hidden) return;
     if (document.activeElement === hint) btn.focus({ preventScroll: true });
@@ -2083,17 +2163,256 @@ window.addEventListener("resize", () => {
     clearTimeout(hintTimer);
     hintTimer = setTimeout(() => { hint.hidden = true; }, 350);
   };
-  const setOpen = (open) => {
+  let foldTimer = 0;
+  const setOpen = (open, playing) => {
     card.classList.toggle("is-min", !open);
     card.setAttribute("aria-hidden", String(!open));
     btn.setAttribute("aria-expanded", String(open));
-    btn.setAttribute("aria-label", open ? "收起播放器" : frame ? "展开播放器" : "点击开启音乐");
+    btn.classList.toggle("on", !!playing);
+    btn.setAttribute("aria-label", !playing ? "点击开启音乐" : open ? "收起播放器" : "展开播放器");
+    // 卡片开着时自动翻阅会让路（和回执抽屉一样算「正在交互」），
+    // 所以几秒不碰它就自己收回去，音乐照放，页面继续走
+    clearTimeout(foldTimer);
+    if (open) foldTimer = setTimeout(() => setOpen(false, playing), 7000);
   };
+  // 鼠标停在卡片上（或手指按住）时不要收回去
+  const holdOpen = () => clearTimeout(foldTimer);
+  const releaseHold = () => {
+    if (!card.classList.contains("is-min")) foldTimer = setTimeout(() => setOpen(false, btn.classList.contains("on")), 7000);
+  };
+  card.addEventListener("pointerenter", holdOpen);
+  card.addEventListener("pointerleave", releaseHold);
+  card.addEventListener("touchstart", holdOpen, { passive: true });
+  card.addEventListener("touchend", releaseHold, { passive: true });
+
+  /* ============ local：自托管音轨 ============ */
+  if (local) {
+    const SECONDS = Number(M.seconds) || 96;
+    const fmt = (t) => {
+      const s = Math.max(0, Math.floor(t || 0));
+      return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+    };
+    const total = fmt(SECONDS);
+    timeEl.textContent = "0:00 / " + total;
+    localRow.hidden = false;
+    tip.hidden = true;                                   // 正常情况点一下就该出声
+
+    let ctx = null, gain = null, node = null, buffer = null;
+    let playing = false, loading = false;
+    let startCtxTime = 0, startOffset = 0, lastPos = 0, raf = 0;
+
+    // <source> 只用来让构建给文件加 hash 并挑格式；挑好之后换成单一 src，
+    // 关闭时才能把 src 一起摘掉、真正释放解码缓存
+    const picks = [...bgm.querySelectorAll("source")].map((s) => ({ src: s.src, type: s.type }));
+    const can = (t) => !t || bgm.canPlayType(t) !== "";
+    // 优先 AAC（同等码率下明显更好），不支持就换 MP3
+    const ranked = [...picks].sort((a, b) => (can(b.type) ? 1 : 0) - (can(a.type) ? 1 : 0));
+    const candidates = ranked.map((p) => p.src).filter(Boolean);
+    const chosen = candidates[0] || "";
+    picks.forEach(() => bgm.querySelector("source").remove());
+    if (chosen) bgm.src = chosen;
+
+    const paint = (pos) => {
+      const p = Math.max(0, Math.min(SECONDS, pos));
+      bar.style.width = ((p / SECONDS) * 100).toFixed(2) + "%";
+      timeEl.textContent = fmt(p) + " / " + total;
+    };
+    const position = () => {
+      if (!playing) return lastPos;
+      if (node && ctx) return (startOffset + Math.max(0, ctx.currentTime - startCtxTime)) % buffer.duration;
+      return (bgm.currentTime || 0) % SECONDS;
+    };
+    const tick = () => {
+      raf = 0;
+      if (!playing) return;
+      lastPos = position();
+      paint(lastPos);
+      raf = requestAnimationFrame(tick);
+    };
+    const setIcon = (on) => {
+      playIcon.className = on ? "icon-pause" : "icon-play";
+      playBtn.setAttribute("aria-label", on ? "暂停" : "播放");
+    };
+    const sync = () => {
+      setIcon(playing);
+      if (playing && !raf) raf = requestAnimationFrame(tick);
+      if (!playing && raf) { cancelAnimationFrame(raf); raf = 0; }
+      setOpen(!card.classList.contains("is-min"), playing || loading);
+    };
+    const note = (text) => { tip.textContent = text; tip.hidden = false; };
+    const stopBuffer = () => {
+      if (!node) return;
+      try { node.onended = null; node.stop(); } catch (e) {}
+      try { node.disconnect(); } catch (e) {}
+      node = null;
+    };
+    const startBuffer = () => {
+      if (!buffer || !ctx) return false;
+      stopBuffer();
+      node = ctx.createBufferSource();
+      node.buffer = buffer;
+      node.loop = true;
+      node.connect(gain);
+      startOffset = lastPos % buffer.duration;
+      startCtxTime = ctx.currentTime + 0.02;
+      node.start(startCtxTime, startOffset);
+      playing = true;
+      return true;
+    };
+    // 解码结果按 96.000s 收口：AAC / MP3 尾部还有十几毫秒编码器补的静音，留着会让接缝发空
+    const trim = (buf) => {
+      const len = Math.round(SECONDS * buf.sampleRate);
+      const pad = buf.length - len;
+      if (pad <= 0 || pad > buf.sampleRate * 0.25) return buf;    // 对不上就原样用，别裁掉真内容
+      try {
+        const out = ctx.createBuffer(buf.numberOfChannels, len, buf.sampleRate);
+        for (let c = 0; c < buf.numberOfChannels; c++) {
+          out.getChannelData(c).set(buf.getChannelData(c).subarray(0, len));
+        }
+        return out;
+      } catch (e) { return buf; }
+    };
+
+    // 这一整段必须在点击的同一个调用栈里开始，iOS / 微信才会把音频解锁
+    const unlock = () => {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      if (!ctx) {
+        try { ctx = new AC(); } catch (e) { ctx = null; return; }
+        gain = ctx.createGain();
+        gain.gain.value = 0.9;
+        gain.connect(ctx.destination);
+      }
+      if (ctx.state === "suspended") ctx.resume().catch(() => {});
+    };
+
+    const decode = async (url) => {
+      let res;
+      try { res = await fetch(url); } catch (e) { return null; }
+      if (!res.ok) return null;
+      const bytes = await res.arrayBuffer();
+      try {
+        const buf = await new Promise((ok, bad) => {
+          const r = ctx.decodeAudioData(bytes, ok, bad);
+          if (r && r.then) r.then(ok, bad);
+        });
+        return trim(buf);
+      } catch (e) { return null; }
+    };
+    // 依次试 AAC、MP3：哪份这个浏览器解不出来就换下一份
+    const loadBuffer = async () => {
+      const order = [bgm.currentSrc || chosen, ...candidates].filter(Boolean);
+      for (const url of order) {
+        const buf = await decode(url);
+        if (buf) { buffer = buf; return true; }
+      }
+      return false;
+    };
+
+    // 兜底：<audio loop>（个别 WebView 不执行 loop，用 ended 接回去）
+    const startElement = () => {
+      bgm.loop = true;
+      bgm.volume = 0.9;
+      playing = true;
+      const p = bgm.play();
+      if (p && p.catch) p.catch(() => {
+        playing = false;
+        sync();
+        note("浏览器需要你再点一下 ▶\uFE0E 才能出声");
+      });
+    };
+    bgm.addEventListener("ended", () => {
+      if (!playing) return;
+      try { bgm.currentTime = 0; bgm.play().catch(() => {}); } catch (e) {}
+    });
+
+    const begin = async () => {
+      if (playing || loading) return;
+      if (chosen && !bgm.getAttribute("src")) bgm.src = chosen;      // 关闭后再打开
+      unlock();                                          // 先同步解锁，再异步拿数据
+      loading = true;
+      setIcon(false);
+      playBtn.setAttribute("aria-busy", "true");
+      setOpen(true, true);
+      const ok = (ctx && ctx.state !== "closed") ? await loadBuffer() : false;
+      if (ok) { startBuffer(); }
+      else { if (ctx) { try { ctx.close(); } catch (e) {} } ctx = null; gain = null; startElement(); }
+      loading = false;
+      playBtn.removeAttribute("aria-busy");
+      if (playing) tip.hidden = true;
+      sync();
+    };
+    const pause = () => {
+      if (!playing) return;
+      lastPos = position();
+      playing = false;
+      stopBuffer();
+      if (!bgm.paused) { try { bgm.pause(); } catch (e) {} }
+      paint(lastPos);
+      sync();
+    };
+    const resume = () => {
+      if (playing) return;
+      if (buffer && ctx) { unlock(); startBuffer(); sync(); return; }
+      begin();
+    };
+    const release = () => {
+      playing = false;
+      loading = false;
+      stopBuffer();
+      if (raf) { cancelAnimationFrame(raf); raf = 0; }
+      try { bgm.pause(); } catch (e) {}
+      try { bgm.removeAttribute("src"); bgm.load(); } catch (e) {}   // 真正释放解码缓存
+      buffer = null;
+      if (ctx) { try { ctx.close(); } catch (e) {} }
+      ctx = null; gain = null;
+      lastPos = 0;
+      paint(0);
+      setIcon(false);
+      setOpen(false, false);
+      clearTimeout(foldTimer);
+    };
+
+    playBtn.addEventListener("click", () => { hideHint(); playing ? pause() : resume(); });
+    btn.addEventListener("click", () => {
+      hideHint();
+      if (!playing && !loading) { resume(); return; }
+      setOpen(card.classList.contains("is-min"), true);   // 已在播放：只收起 / 展开，音乐不停
+    });
+    hint.addEventListener("click", () => {
+      hideHint();
+      if (!playing && !loading) resume();
+      setOpen(true, true);
+    });
+    document.getElementById("musicMin").addEventListener("click", () => {
+      setOpen(false, playing || loading);
+      btn.focus({ preventScroll: true });
+    });
+    document.getElementById("musicClose").addEventListener("click", () => {
+      release();
+      btn.focus({ preventScroll: true });
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (playing) lastPos = position();
+      } else if (playing && ctx && (ctx.state === "suspended" || ctx.state === "interrupted")) {
+        // iOS 切后台会把 AudioContext 挂起，回来要自己唤醒；currentTime 会接着走，不用重头
+        ctx.resume().catch(() => {});
+      }
+    });
+    setTimeout(hideHint, 5000);
+    return;
+  }
+
+  /* ============ netease：旧版外链播放器，原样保留 ============ */
+  localRow.hidden = true;
+  tip.hidden = false;
+  let frame = null;
   const mount = () => {
     // auto=1：安卓 Chrome 等会沿用这次点击直接出声；iPhone / 微信一般拦截，
     // 所以小播放器始终可见，宾客可以点它自己的 ▶。
     frame = document.createElement("iframe");
-    frame.title = "网易云音乐播放器：" + M.title;
+    frame.title = "网易云音乐播放器：" + title;
     frame.allow = "autoplay; encrypted-media";
     frame.setAttribute("frameborder", "0");
     frame.setAttribute("scrolling", "no");
@@ -2101,25 +2420,27 @@ window.addEventListener("resize", () => {
     // 在 https 页面里会被当成混合内容拦掉（播放器空白）。这里按它的规则直接选对路径。
     const mobile = /android|iphone|ipad|mobile/i.test(navigator.userAgent);
     frame.src = "https://music.163.com/" + (mobile ? "m/" : "") + "outchain/player?type=2&id=" +
-      encodeURIComponent(M.id) + "&auto=1&height=66";
+      encodeURIComponent(M.mp3Id || M.id) + "&auto=1&height=66";
     slot.appendChild(frame);
-    btn.classList.add("on");
   };
   const unmount = () => {
-    if (frame) { frame.remove(); frame = null; }   // 卸载 iframe = 真正停掉音乐
-    btn.classList.remove("on");
-    setOpen(false);
+    if (frame) { frame.remove(); frame = null; }        // 卸载 iframe = 真正停掉音乐
+    setOpen(false, false);
+    clearTimeout(foldTimer);
     btn.focus({ preventScroll: true });
   };
-  const toggle = () => {
+  btn.addEventListener("click", () => {
     hideHint();
-    if (!frame) { mount(); setOpen(true); return; }
-    setOpen(card.classList.contains("is-min"));    // 只收起/展开，iframe 保留，音乐不停
-  };
-  btn.addEventListener("click", toggle);
-  hint.addEventListener("click", toggle);
+    if (!frame) { mount(); setOpen(true, true); return; }
+    setOpen(card.classList.contains("is-min"), true);    // 只收起/展开，iframe 保留，音乐不停
+  });
+  hint.addEventListener("click", () => {
+    hideHint();
+    if (!frame) mount();
+    setOpen(true, true);
+  });
   document.getElementById("musicMin").addEventListener("click", () => {
-    setOpen(false);
+    setOpen(false, true);
     btn.focus({ preventScroll: true });
   });
   document.getElementById("musicClose").addEventListener("click", unmount);
