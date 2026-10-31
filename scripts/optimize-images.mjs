@@ -25,7 +25,7 @@ const PLAN = {
   "gallery-7": { webp: [600, 1200], jpg: 1200 },
   "gallery-8": { webp: [600, 1200], jpg: 1200 },
   // 第三幕「奔赴山海」：自己拍的荣成海景（华星桥 / 海湾栏杆）
-  "journey-1": { webp: [960, 1440], jpg: 1200 },
+  "journey-1": { webp: [540, 960], jpg: 1200 },
   "journey-2": { webp: [540, 1080], jpg: 1080 },
 };
 
