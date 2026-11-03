@@ -41,17 +41,30 @@ const CONFIG = {
   ],
   mapKeyword: "荣成华星宾馆",
   mapCity: "威海",
-  music: "",                        // 留空 = 不显示 ♪；见下方「背景音乐」
+  music: { provider: "local", … },   // 见下方「背景音乐」
   share: …                          // 读取 #share-config，见下方「分享卡片」
 };
 ```
 
 - 「回复赴约」按钮会打开页内抽屉：每位联系人一个「拨打」按钮；填了 `wechat` 才会出现「复制微信号」。
 
-### 3. 背景音乐（待定）
+### 3. 背景音乐
 
-把 mp3 放进 `public/`（例如 `public/bgm.mp3`），再把 `CONFIG.music` 改成 `"bgm.mp3"`。
-没配置时 ♪ 按钮不出现；文件加载失败也会自动收起，不弹任何提示。不自动播放。
+默认是自托管的原创《奔赴山海》（`assets/audio/`，96.000 秒无缝循环，AAC 与 MP3 各一份，约 1.1MB）。
+宾客点 ♪ 才开始下载（`preload="none"`，首屏不拉音频）；不自动播放。
+
+`CONFIG.music.provider` 改一行即可切换：
+
+```js
+music: {
+  provider: "local",    // 默认：自托管原创《奔赴山海》
+  // provider: "netease",  // 旧版：网易云外链播放器（id 见 mp3Id）
+}
+```
+
+播放优先走 WebAudio（整段解码后精确循环），AudioContext 不可用时退回 `<audio loop>`。
+换音乐时替换 `assets/audio/wedding-loop.m4a` 和 `.mp3`（同一条音轨、同样长度），
+并把 `CONFIG.music.seconds` 改成实际秒数；`scripts/encode-audio.sh` 是从 WAV 母版重新编码的脚本。
 
 ### 4. 分享卡片（微信 / 以后的公众号）
 
